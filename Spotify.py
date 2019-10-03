@@ -1,4 +1,4 @@
 class Spotify:
-    """Interacts with spotify API"""
+    """Interacts with Spotify API"""
     def __init__(self):
         print("Spotify started.")
