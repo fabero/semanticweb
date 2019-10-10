@@ -13,7 +13,7 @@ WHERE
 
 ------------------------------------------------------------------------------------------------------------------------------
 
-Added Genre
+To find a //BAND\\ and its //GENRE\\
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -26,6 +26,38 @@ WHERE
     ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
     ?finalBand wdt:P136 ?genre .
     ?genre rdfs:label ?finalGenreLabel filter (lang(?finalGenreLabel) = "en").
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+To find an //ARTIST\\
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?id ?idLabel
+WHERE
+{
+       ?id wdt:P31 wd:Q5 .
+       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+       ?id rdfs:label "John Mayer"@en .
+       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+To find an //ARTIST\\ and his/her //GENRE\\
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?id ?idLabel ?genreLabel
+WHERE
+{
+       ?id wdt:P31 wd:Q5 .
+       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+       ?id rdfs:label "John Mayer"@en .
+       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+       ?id wdt:P136 ?genre .
+       ?genre rdfs:label ?genreLabel filter (lang(?genreLabel) = "en").
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
