@@ -11,7 +11,22 @@ def main(parseargs):
     artist = '_'.join(parseargs.query.title().split())
 
     hometown = dbpedia.get_hometown(artist)
-    print(hometown)
+
+    # This abstract will be constructed using the available information
+    abstract = '{}'.format(parseargs.query.title())
+
+    # Add something to the abstract for every variable that was found
+    if hometown:
+        # @todo: find a way do discriminate bands and individuals
+        abstract += ' is a band from {}'.format(hometown)
+
+    # if bandmembers:
+
+    # if started_in:
+
+    # etcetera
+
+    print(abstract)
 
 
 if __name__ == '__main__':
