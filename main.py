@@ -7,8 +7,8 @@ spotify = Spotify()
 
 
 def main(parseargs):
-    # @todo: Convert query to correct DBpedia form (e.g. green day -> Green_Day)
-    artist = parseargs.query
+    # Convert query to DBpedia format
+    artist = '_'.join(parseargs.query.title().split())
 
     hometown = dbpedia.get_hometown(artist)
     print(hometown)
