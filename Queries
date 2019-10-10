@@ -1,0 +1,14 @@
+To find a //BAND\\ called Pink Floyd:
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?band ?finalBand ?finalBandLabel
+WHERE
+{
+	?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+    ?finalBand wdt:P31 ?band .
+    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+    FILTER(STRSTARTS(?finalBandLabel, 'John Mayer')) .
+}
+
+------------------------------------------------------------------------------------------------------------------------------
