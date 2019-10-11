@@ -61,6 +61,7 @@ WHERE
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
+
 To find an //ARTIST\\ and his/her //DESCRIPTION\\
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -76,7 +77,9 @@ WHERE
        ?id schema:description ?itemDescription.
        FILTER((LANG(?itemDescription)) = "en")
 }
+
 ------------------------------------------------------------------------------------------------------------------------------
+
 To find an //ARTIST\\ an his/her played //INSTRUMENTS\\
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
