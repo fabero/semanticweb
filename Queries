@@ -1,4 +1,4 @@
-To find a //BAND\\ called Pink Floyd:
+To find a //BAND\\ called The Who:
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -26,6 +26,38 @@ WHERE
     ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
     ?finalBand wdt:P136 ?genre .
     ?genre rdfs:label ?finalGenreLabel filter (lang(?finalGenreLabel) = "en").
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+To find a //BAND\\ and its //DESCRIPTION\\
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?finalBandLabel ?description
+WHERE
+{
+    ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+    ?finalBand wdt:P31 ?band .
+    ?finalBand rdfs:label "The Who"@en .
+    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+    ?finalBand schema:description ?description filter (lang(?description) = "en").
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+To find a //BAND\\ and its //MEMBERS\\
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?finalBandLabel ?members
+WHERE
+{
+    ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+    ?finalBand wdt:P31 ?band .
+    ?finalBand rdfs:label "The Who"@en .
+    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+    ?finalBand wdt:P527/rdfs:label ?members filter (lang(?members) = "en").
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -74,8 +106,7 @@ WHERE
        ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
        ?id rdfs:label "John Mayer"@en .
        ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
-       ?id schema:description ?itemDescription.
-       FILTER((LANG(?itemDescription)) = "en")
+       ?id schema:description ?itemDescription filter (lang(?itemDescription) = "en")
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
