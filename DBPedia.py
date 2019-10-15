@@ -6,23 +6,24 @@ class DBPedia:
     def __init__(self):
         self.sparql = SPARQLWrapper("http://dbpedia.org/sparql")
         self.sparql.setReturnFormat(JSON)
-        print("DBPedia started.")
+        self.prefixes = """
+        PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX wd: <http://www.wikidata.org/entity/>
+        """
 
     def get_hometown(self, artist):
-        self.sparql.setQuery("""
+        self.sparql.setQuery(self.prefixes + """
         SELECT ?hometownLabel 
             WHERE {
             <http://dbpedia.org/resource/""" + artist + """> <http://dbpedia.org/ontology/hometown> ?hometown .
-            ?hometown <http://www.w3.org/2000/01/rdf-schema#label> ?hometownLabel .
+            ?hometown rdfs:label ?hometownLabel filter (lang(?hometownLabel) = "en").
             }
         """)
 
-        # List of hometowns in multiple languages
         results = self.sparql.query().convert()['results']['bindings']
+
         if results is not None:
-            for item in results:
-                # Return the English version of hometown
-                if item['hometownLabel']['xml:lang'] == 'en':
-                    return item['hometownLabel']['value']
+            return results[0]['hometownLabel']['value']
         return None
 

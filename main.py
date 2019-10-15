@@ -31,6 +31,6 @@ def main(parseargs):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Fetch data on musical artists and bands.')
-    parser.add_argument('query',  type=str, help='The band or artist to search for.')
+    parser.add_argument('query',  type=str, help='The band or artist to search for. Should be in quotes.')
     args = parser.parse_args()
     main(args)
