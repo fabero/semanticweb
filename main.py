@@ -10,10 +10,11 @@ def main(parseargs):
     name = parseargs.query.title()
 
     label = wikidata.get_label(name)
-    print(label)
+
+    genres = wikidata.get_genres(name)
 
     # This abstract will be constructed using the available information
-    abstract = '{}'.format(name)
+    abstract = '{}. \n'.format(name)
 
     # Add something to the abstract for every variable that was found
     # if hometown:
@@ -24,8 +25,15 @@ def main(parseargs):
 
     # if started_in:
 
+    if genres is not None:
+        if len(genres) > 1:
+            abstract += 'The genres of the band are {} and {}.'.format(", ".join(genres[:-1]),genres[-1])
+        else:
+            abstract += 'The genre of the band is {}.'.format(genres[0])
+
     # etcetera
 
+    print(abstract)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Fetch data on musical artists and bands.')
