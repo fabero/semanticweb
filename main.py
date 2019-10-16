@@ -1,15 +1,15 @@
 import argparse
 from Spotify import *
-from DBPedia import *
+from WikiData import *
 
-dbpedia = DBPedia()
+wikidata = WikiData()
 spotify = Spotify()
 
 
 def main(parseargs):
     name = parseargs.query.title()
 
-    label = dbpedia.get_label(name)
+    label = wikidata.get_label(name)
     print(label)
 
     # This abstract will be constructed using the available information
