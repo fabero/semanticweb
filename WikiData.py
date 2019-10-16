@@ -1,8 +1,8 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 
-class DBPedia:
-    """Interacts with DBPedia"""
+class WikiData:
+    """Interacts with WikiData"""
     def __init__(self):
         self.sparql = SPARQLWrapper("https://query.wikidata.org/bigdata/namespace/wdq/sparql")
         self.sparql.setReturnFormat(JSON)
@@ -29,4 +29,5 @@ class DBPedia:
         if results is not None:
             return results[0]['finalBandLabel']['value']
         return None
+
 
