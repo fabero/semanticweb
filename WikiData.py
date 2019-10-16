@@ -30,4 +30,28 @@ class WikiData:
             return results[0]['finalBandLabel']['value']
         return None
 
+    def get_genres(self, band):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?finalBandLabel ?finalGenreLabel
+                WHERE
+                {
+                    ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+                    ?finalBand wdt:P31 ?band .
+                    ?finalBand rdfs:label """ +'"' + band + '"' + """@en .
+                    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+                    ?finalBand wdt:P136 ?genre .
+                    ?genre rdfs:label ?finalGenreLabel filter (lang(?finalGenreLabel) = "en").
+                }
+        """)
 
+        results = self.sparql.query().convert()['results']['bindings']
+
+        genres = []
+        if results is not None:
+            for item in results:
+                if item['finalGenreLabel']:
+                    genres.append(item['finalGenreLabel']['value'])
+        if len(genres) > 0 :
+            return genres
+        else:
+            return None
