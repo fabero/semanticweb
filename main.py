@@ -14,14 +14,14 @@ def main(parseargs):
     label = wikidata.get_label(name)
 
     if(is_artist):
+        referall = "artist"
         genres = wikidata.get_artist_genres(name)
         members = None
-        time_period = None
+        time_period = wikidata.get_artist_start_period(name)
     else:
+        referall = "band"
         genres = wikidata.get_band_genres(name)
-
         members = wikidata.get_band_members(name)
-
         time_period = wikidata.get_band_time_period(name)
 
     # This abstract will be constructed using the available information
@@ -39,9 +39,9 @@ def main(parseargs):
 
     if genres is not None:
         if len(genres) > 1:
-            abstract += 'The genres of the band are {} and {}. '.format(", ".join(genres[:-1]),genres[-1])
+            abstract += 'The genres of the {} are {} and {}. '.format(referall,", ".join(genres[:-1]),genres[-1])
         else:
-            abstract += 'The genre of the band is {}. '.format(genres[0])
+            abstract += 'The genre of the {} is {}. '.format(referall, genres[0])
 
     # etcetera
 
@@ -53,9 +53,9 @@ def main(parseargs):
 
     if time_period is not None:
         if len(time_period) > 0:
-            abstract += 'The band started performing in {}.'.format(time_period[0][0:4])
+            abstract += 'The {} started performing in {}.'.format(referall,time_period[0][0:4])
         else:
-            abstract += 'It is unclear when the band started performing.'
+            abstract += 'It is unclear when the {} started performing.'.format(referall)
 
     print(abstract)
 
