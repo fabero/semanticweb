@@ -53,3 +53,27 @@ class WikiData:
             if len(genres) > 0:
                 return genres
         return None
+
+    def get_members(self, band):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?finalBandLabel ?members
+                WHERE
+                {
+                    ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+                    ?finalBand wdt:P31 ?band .
+                    ?finalBand rdfs:label """ +'"' + band + '"' + """@en .
+                    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+                    ?finalBand wdt:P527/rdfs:label ?members filter (lang(?members) = "en").
+                }
+        """)
+
+        results = self.sparql.query().convert()['results']['bindings']
+
+        band = []
+        if len(results) > 0:
+            for item in results:
+                if item['members']:
+                    band.append(item['members']['value'])
+            if len(band) > 0:
+                return band
+        return None
