@@ -123,3 +123,33 @@ class WikiData:
             if len(period) > 0:
                 return period
         return None
+
+    # Artist queries
+
+    def get_artist_genres(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?id ?idLabel ?genreLabel
+            WHERE
+            {
+                   ?id wdt:P31 wd:Q5 .
+                   ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+                   ?id rdfs:label """ +'"' + artist + '"' + """@en .
+                   ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+                   ?id wdt:P136 ?genre .
+                   ?genre rdfs:label ?genreLabel filter (lang(?genreLabel) = "en").
+            }
+        """)
+
+        results = self.sparql.query().convert()['results']['bindings']
+        genres = []
+        if len(results) > 0:
+            if len(results[0]) > 0:
+                for item in results:
+                    if item['genreLabel']:
+                        genres.append(item['genreLabel']['value'])
+                return genres
+            else:
+                return None
+        return None
+
+    

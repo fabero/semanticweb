@@ -14,7 +14,7 @@ def main(parseargs):
     label = wikidata.get_label(name)
 
     if(is_artist):
-        genres = None
+        genres = wikidata.get_artist_genres(name)
         members = None
         time_period = None
     else:
