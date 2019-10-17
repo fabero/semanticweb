@@ -25,7 +25,7 @@ def main(parseargs):
         time_period = wikidata.get_band_time_period(name)
 
     # This abstract will be constructed using the available information
-    abstract = '{}. \n'.format(name)
+    abstract = ''
 
     # Add something to the abstract for every variable that was found
     # if hometown:
@@ -36,10 +36,18 @@ def main(parseargs):
 
     # if started_in:
 
+    if time_period is not None:
+        if len(time_period) > 0:
+            abstract += '{} started performing in {}. '.format(name,time_period[0][0:4])
+        else:
+            abstract += 'It is unclear when {} started performing. '.format(name)
 
     if genres is not None:
         if len(genres) > 1:
-            abstract += 'The genres of the {} are {} and {}. '.format(referall,", ".join(genres[:-1]),genres[-1])
+            if len(genres) < 3:
+                abstract += 'The genres of the {} are {} and {}. '.format(referall,", ".join(genres[:-1]),genres[-1])
+            else:
+                abstract += 'The genres of the {} are {} and more.'.format(referall,", ".join(genres[:4]))
         else:
             abstract += 'The genre of the {} is {}. '.format(referall, genres[0])
 
@@ -50,12 +58,6 @@ def main(parseargs):
             abstract += 'Members of the band are {} and {}. '.format(", ".join(members[:-1]),members[-1])
         else:
             abstract += '{} is the band member. '.format(", ".join(members[0]))
-
-    if time_period is not None:
-        if len(time_period) > 0:
-            abstract += 'The {} started performing in {}.'.format(referall,time_period[0][0:4])
-        else:
-            abstract += 'It is unclear when the {} started performing.'.format(referall)
 
     print(abstract)
 
