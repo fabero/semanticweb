@@ -77,3 +77,27 @@ class WikiData:
             if len(band) > 0:
                 return band
         return None
+
+    def get_time_period(self, band):
+        self.sparql.setQuery(self.prefixes + """
+        SELECT DISTINCT ?finalBandLabel ?StartWorkPeriod
+            WHERE
+            {
+                ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+                ?finalBand wdt:P31 ?band .
+                ?finalBand rdfs:label """ +'"' + band + '"' + """@en .
+                ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+                ?finalBand wdt:P2031 ?StartWorkPeriod .
+            }
+        """)
+
+        results = self.sparql.query().convert()['results']['bindings']
+
+        period = []
+        if len(results) > 0:
+            for item in results:
+                if item['StartWorkPeriod']:
+                    period.append(item['StartWorkPeriod']['value'])
+            if len(period) > 0:
+                return period
+        return None
