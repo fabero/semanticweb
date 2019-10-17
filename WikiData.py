@@ -12,6 +12,28 @@ class WikiData:
         PREFIX wd: <http://www.wikidata.org/entity/>
         """
 
+    def check_if_artist(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?id ?idLabel ?genreLabel
+            WHERE
+            {
+                   ?id wdt:P31 wd:Q5 .
+                   ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+                   ?id rdfs:label """ +'"' + artist + '"' + """@en .
+                   ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+                   ?id wdt:P136 ?genre .
+                   ?genre rdfs:label ?genreLabel filter (lang(?genreLabel) = "en").
+            }
+        """)
+
+        results = self.sparql.query().convert()['results']['bindings']
+        if len(results) > 0:
+            if len(results[0]) > 0:
+                return True
+            else:
+                return False
+        return False
+
     def get_label(self, label):
         self.sparql.setQuery(self.prefixes + """
         SELECT DISTINCT ?finalBandLabel ?description
@@ -29,7 +51,7 @@ class WikiData:
             return results[0]['finalBandLabel']['value']
         return None
 
-    def get_genres(self, band):
+    def get_band_genres(self, band):
         self.sparql.setQuery(self.prefixes + """
             SELECT DISTINCT ?finalBandLabel ?finalGenreLabel
                 WHERE
@@ -54,7 +76,7 @@ class WikiData:
                 return genres
         return None
 
-    def get_members(self, band):
+    def get_band_members(self, band):
         self.sparql.setQuery(self.prefixes + """
             SELECT DISTINCT ?finalBandLabel ?members
                 WHERE
@@ -78,7 +100,7 @@ class WikiData:
                 return band
         return None
 
-    def get_time_period(self, band):
+    def get_band_time_period(self, band):
         self.sparql.setQuery(self.prefixes + """
         SELECT DISTINCT ?finalBandLabel ?StartWorkPeriod
             WHERE
