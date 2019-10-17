@@ -15,6 +15,8 @@ def main(parseargs):
 
     members = wikidata.get_members(name)
 
+    time_period = wikidata.get_time_period(name)
+
     # This abstract will be constructed using the available information
     abstract = '{}. \n'.format(name)
 
@@ -40,6 +42,13 @@ def main(parseargs):
             abstract += 'Members of the band are {} and {}. '.format(", ".join(members[:-1]),members[-1])
         else:
             abstract += '{} is the band member. '.format(", ".join(members[0]))
+
+    if time_period is not None:
+        if len(time_period) > 0:
+            abstract += 'The band started performing in {}.'.format(time_period[0][0:4])
+        else:
+            abstract += 'It is unclear when the band started performing.'
+
     print(abstract)
 
 if __name__ == '__main__':
