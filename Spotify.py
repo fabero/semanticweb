@@ -58,14 +58,18 @@ class Spotify:
     def get_artist_albums(self, artist_id):
         albums_url = f'https://api.spotify.com/v1/artists/{artist_id}/albums'
         response = requests.get(albums_url, headers=self.default_headers).json().get('items')
-        album_titles = list(set([album['name'] for album in response]))
-        return album_titles
+        if response is not None:
+            album_titles = list(set([album['name'] for album in response]))
+            return album_titles
+        return None
 
     def get_top_tracks(self, artist_id):
         tracks_url = f'https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=NL'
         response = requests.get(tracks_url, headers=self.default_headers).json().get('tracks')
-        track_names = list(set([track['name'] for track in response]))
-        return track_names
+        if response is not None:
+            track_names = list(set([track['name'] for track in response]))
+            return track_names
+        return None
 
 
 def b64encode(msg: str) -> str:
