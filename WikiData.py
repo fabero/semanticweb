@@ -152,4 +152,27 @@ class WikiData:
                 return None
         return None
 
-    
+    def get_artist_start_period(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+        SELECT DISTINCT ?id ?idLabel ?StartWorkPeriod
+            WHERE
+            {
+                   ?id wdt:P31 wd:Q5 .
+                   ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+                   ?id rdfs:label """ +'"' + artist + '"' + """@en .
+                   ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+                   ?id wdt:P2031 ?StartWorkPeriod .
+                   #Beware that the output maybe not be in English.
+            
+            }
+        """)
+
+        results = self.sparql.query().convert()['results']['bindings']
+        period = []
+        if len(results) > 0:
+            for item in results:
+                if item['StartWorkPeriod']:
+                    period.append(item['StartWorkPeriod']['value'])
+            if len(period) > 0:
+                return period
+        return None
