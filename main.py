@@ -9,13 +9,20 @@ spotify = Spotify()
 def main(parseargs):
     name = parseargs.query.title()
 
+    is_artist = wikidata.check_if_artist(name)
+
     label = wikidata.get_label(name)
 
-    genres = wikidata.get_genres(name)
+    if(is_artist):
+        genres = None
+        members = None
+        time_period = None
+    else:
+        genres = wikidata.get_band_genres(name)
 
-    members = wikidata.get_members(name)
+        members = wikidata.get_band_members(name)
 
-    time_period = wikidata.get_time_period(name)
+        time_period = wikidata.get_band_time_period(name)
 
     # This abstract will be constructed using the available information
     abstract = '{}. \n'.format(name)
@@ -28,6 +35,7 @@ def main(parseargs):
     # if bandmembers:
 
     # if started_in:
+
 
     if genres is not None:
         if len(genres) > 1:
