@@ -25,8 +25,7 @@ class WikiData:
             }
         """)
         results = self.sparql.query().convert()['results']['bindings']
-
-        if results is not None:
+        if len(results) > 0:
             return results[0]['finalBandLabel']['value']
         return None
 
@@ -47,11 +46,10 @@ class WikiData:
         results = self.sparql.query().convert()['results']['bindings']
 
         genres = []
-        if results is not None:
+        if len(results) > 0:
             for item in results:
                 if item['finalGenreLabel']:
                     genres.append(item['finalGenreLabel']['value'])
-        if len(genres) > 0 :
-            return genres
-        else:
-            return None
+            if len(genres) > 0:
+                return genres
+        return None
