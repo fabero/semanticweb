@@ -17,6 +17,8 @@ def main(parseargs):
 
     time_period = wikidata.get_time_period(name)
 
+    spotify.get_top_tracks('1vCWHaC5f2uS3yhpwWbIA6')
+
     # This abstract will be constructed using the available information
     abstract = '{}. \n'.format(name)
 
