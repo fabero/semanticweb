@@ -13,6 +13,8 @@ def main(parseargs):
 
     genres = wikidata.get_genres(name)
 
+    members = wikidata.get_members(name)
+
     # This abstract will be constructed using the available information
     abstract = '{}. \n'.format(name)
 
@@ -27,12 +29,17 @@ def main(parseargs):
 
     if genres is not None:
         if len(genres) > 1:
-            abstract += 'The genres of the band are {} and {}.'.format(", ".join(genres[:-1]),genres[-1])
+            abstract += 'The genres of the band are {} and {}. '.format(", ".join(genres[:-1]),genres[-1])
         else:
-            abstract += 'The genre of the band is {}.'.format(genres[0])
+            abstract += 'The genre of the band is {}. '.format(genres[0])
 
     # etcetera
 
+    if members is not None:
+        if len(members) > 1:
+            abstract += 'Members of the band are {} and {}. '.format(", ".join(members[:-1]),members[-1])
+        else:
+            abstract += '{} is the band member. '.format(", ".join(members[0]))
     print(abstract)
 
 if __name__ == '__main__':
