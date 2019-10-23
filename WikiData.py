@@ -4,7 +4,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 class WikiData:
     """Interacts with WikiData"""
     def __init__(self):
-        self.sparql = SPARQLWrapper("https://query.wikidata.org/bigdata/namespace/wdq/sparql")
+        self.sparql = SPARQLWrapper("https://query.wikidata.org/bigdata/namespace/wdq/sparql", agent="agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36")
         self.sparql.setReturnFormat(JSON)
         self.prefixes = """
         PREFIX wdt: <http://www.wikidata.org/prop/direct/>
