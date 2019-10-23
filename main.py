@@ -24,6 +24,8 @@ def main(parseargs):
         members = wikidata.get_band_members(name)
         time_period = wikidata.get_band_time_period(name)
 
+    spotify.get_top_tracks('1vCWHaC5f2uS3yhpwWbIA6')
+
     # This abstract will be constructed using the available information
     abstract = ''
 
