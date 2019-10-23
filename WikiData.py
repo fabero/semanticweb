@@ -51,6 +51,25 @@ class WikiData:
             return results[0]['finalBandLabel']['value']
         return None
 
+    def get_band_spotify_id(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+               SELECT DISTINCT ?finalBandLabel ?spotify
+                    WHERE
+                    {
+                        ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+                        ?finalBand wdt:P31 ?band .
+                        ?finalBand rdfs:label """ +'"' + artist + '"' + """@en .
+                        ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+                        ?finalBand wdt:P1902 ?spotify.
+                    }
+           """)
+        results = self.sparql.query().convert()['results']['bindings']
+        if len(results) > 0:
+            for item in results:
+                if item['spotify']:
+                    return item['spotify']['value']
+        return None
+
     def get_band_genres(self, band):
         self.sparql.setQuery(self.prefixes + """
             SELECT DISTINCT ?finalBandLabel ?finalGenreLabel
@@ -125,6 +144,25 @@ class WikiData:
         return None
 
     # Artist queries
+
+    def get_artist_spotify_id(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?id ?idLabel ?spotify
+                WHERE
+                {
+                       ?id wdt:P31 wd:Q5 .
+                       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+                       ?id rdfs:label """ +'"' + artist + '"' + """@en .
+                       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+                       ?id wdt:P1902 ?spotify
+                }
+        """)
+        results = self.sparql.query().convert()['results']['bindings']
+        if len(results) > 0:
+            for item in results:
+                if item['id']:
+                    return item['spotify']['value']
+        return None
 
     def get_artist_genres(self, artist):
         self.sparql.setQuery(self.prefixes + """
