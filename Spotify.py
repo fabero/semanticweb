@@ -68,8 +68,26 @@ class Spotify:
         response = requests.get(tracks_url, headers=self.default_headers).json().get('tracks')
         if response is not None:
             track_names = list(set([track['name'] for track in response]))
-            return track_names
+            track_ids = list(set([track['id'] for track in response]))
+            return track_names, track_ids
         return None
+
+    def get_artist_features(self, track_ids):
+        id_list = ','.join(track_ids)
+        features_url = f'https://api.spotify.com/v1/audio-features/?ids={id_list}'
+        response = requests.get(features_url, headers=self.default_headers).json()
+        if response is not None:
+            features = {
+                'danceability': [],
+                'energy': []
+            }
+            for track in response.get('audio_features'):
+                features['danceability'].append(track.get('danceability'))
+                features['energy'].append(track.get('energy'))
+
+            return sum(features.get('danceability'))/len(features.get('danceability')),\
+                   sum(features.get('energy'))/len(features.get('energy'))
+
 
 
 def b64encode(msg: str) -> str:

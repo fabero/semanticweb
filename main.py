@@ -30,7 +30,8 @@ def main(parseargs):
         time_period = wikidata.get_band_time_period(name)
         spotify_id = wikidata.get_band_spotify_id(name)
         if (spotify_id != ""):
-            top_tracks = spotify.get_top_tracks(spotify_id)
+            top_tracks, top_tracks_ids = spotify.get_top_tracks(spotify_id)
+            danceability, energy = spotify.get_artist_features(top_tracks_ids)
 
     # This abstract will be constructed using the available information
     abstract = ''
