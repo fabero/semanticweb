@@ -72,6 +72,14 @@ class Spotify:
             return track_names, track_ids
         return None
 
+    def get_related_artists(self, artist_id):
+        artists_url = f'https://api.spotify.com/v1/artists/{artist_id}/related-artists'
+        response = requests.get(artists_url, headers=self.default_headers).json().get('artists')
+        if response is not None:
+            artist_names = list(set([artist['name'] for artist in response]))
+            return artist_names
+        return None
+
     def get_artist_features(self, track_ids):
         id_list = ','.join(track_ids)
         features_url = f'https://api.spotify.com/v1/audio-features/?ids={id_list}'

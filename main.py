@@ -14,6 +14,10 @@ def main(parseargs):
     label = wikidata.get_label(name)
 
     top_tracks = None
+    albums = None
+    related_artists = None
+    popularity = None
+    follower_total = None
 
     if(is_artist):
         referall = "artist"
@@ -21,14 +25,20 @@ def main(parseargs):
         members = None
         time_period = wikidata.get_artist_start_period(name)
         spotify_id = wikidata.get_artist_spotify_id(name)
-        if(spotify_id != ""):
-            top_tracks = spotify.get_top_tracks(spotify_id)
     else:
         referall = "band"
         genres = wikidata.get_band_genres(name)
         members = wikidata.get_band_members(name)
         time_period = wikidata.get_band_time_period(name)
         spotify_id = wikidata.get_band_spotify_id(name)
+
+    if (spotify_id != "" and spotify_id is not None):
+        top_tracks = spotify.get_top_tracks(spotify_id)
+        albums = spotify.get_artist_albums(spotify_id)
+        related_artists = spotify.get_related_artists(spotify_id)
+        artist_data = spotify.get_artist(spotify_id)
+        popularity = artist_data['popularity']
+        follower_total = artist_data['followers']['total']
         if (spotify_id != ""):
             top_tracks, top_tracks_ids = spotify.get_top_tracks(spotify_id)
             danceability, energy = spotify.get_artist_features(top_tracks_ids)
@@ -45,20 +55,39 @@ def main(parseargs):
 
     # if started_in:
 
+    extended_referall = referall
+
+    def popularityString(popularity):
+        result = " "
+        if(popularity is not None):
+            if(popularity < 50):
+                if(popularity > 30):
+                    result = " medium popular "
+                else:
+                    result = " not so popular "
+            else:
+                if(popularity > 80):
+                    result = " extremely popular "
+                else:
+                    result = " popular "
+        return result
+
+    if (spotify_id != ""):
+        if(genres is not None):
+            if(len(genres) > 0):
+                extended_referall = "a{}{} {}".format(popularityString(popularity), genres[0], referall)
+
     if time_period is not None:
         if len(time_period) > 0:
-            abstract += '{} started performing in {}. '.format(name,time_period[0][0:4])
+            abstract += '{}, {}, started performing in {}. '.format(name,extended_referall,time_period[0][0:4])
         else:
-            abstract += 'It is unclear when {} started performing. '.format(name)
+            abstract += 'It is unclear when {}, {}, started performing. '.format(name,extended_referall)
 
-    if genres is not None:
-        if len(genres) > 1:
-            if len(genres) < 3:
-                abstract += 'The genres of the {} are {} and {}. '.format(referall,", ".join(genres[:-1]),genres[-1])
-            else:
-                abstract += 'The genres of the {} are {} and more. '.format(referall,", ".join(genres[:4]))
+    if top_tracks is not None:
+        if len(top_tracks) > 1:
+            abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(top_tracks[:2]), top_tracks[-1])
         else:
-            abstract += 'The genre of the {} is {}. '.format(referall, genres[0])
+            abstract += 'The top track of the {} is {}. '.format(referall, top_tracks[0])
 
     # etcetera
 
@@ -68,14 +97,17 @@ def main(parseargs):
         else:
             abstract += '{} is the band member. '.format(", ".join(members[0]))
 
-    if top_tracks is not None:
-        if len(top_tracks) > 1:
-            if len(top_tracks) < 3:
-                abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(top_tracks[:-1]), top_tracks[-1])
-            else:
-                abstract += 'Top tracks of the {} are {} and more. '.format(referall, ", ".join(top_tracks[:4]))
+    if albums is not None:
+        if len(albums) > 1:
+            abstract += 'Some albums of the {} are {} and {}. '.format(referall, ", ".join(albums[:2]),albums[-1])
         else:
-            abstract += 'The top track of the {} is {}. '.format(referall, top_tracks[0])
+            abstract += 'An album of the {} is {}. '.format(referall, albums[0])
+
+    if related_artists is not None:
+        if len(related_artists) > 1:
+            abstract += 'Related artists are {} and {}. '.format(", ".join(related_artists[:2]),related_artists[-1])
+        else:
+            abstract += 'A related artist is {}. '.format(referall, related_artists[0])
 
     print(abstract)
 
