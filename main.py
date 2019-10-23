@@ -49,24 +49,21 @@ def main(parseargs):
 
     if time_period is not None:
         if len(time_period) > 0:
-            abstract += '{} started performing in {}. '.format(name,time_period[0][0:4])
+            if genres is not None:
+                abstract += '{}, a {} {}, started performing in {}. '.format(name,genres[0],referall,time_period[0][0:4])
+            else:
+                abstract += '{} started performing in {}. '.format(name,time_period[0][0:4])
         else:
-            abstract += 'It is unclear when {} started performing. '.format(name)
+            if genres is not None:
+                abstract += 'It is unclear when {}, a {} {}, started performing. '.format(name,genres[0],referall)
+            else:
+                abstract += 'It is unclear when {} started performing. '.format(name)
 
     if top_tracks is not None:
         if len(top_tracks) > 1:
             abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(top_tracks[:2]), top_tracks[-1])
         else:
             abstract += 'The top track of the {} is {}. '.format(referall, top_tracks[0])
-
-    if genres is not None:
-        if len(genres) > 1:
-            if len(genres) < 3:
-                abstract += 'The genres of the {} are {} and {}. '.format(referall,", ".join(genres[:-1]),genres[-1])
-            else:
-                abstract += 'The genres of the {} are {} and more. '.format(referall,", ".join(genres[:4]))
-        else:
-            abstract += 'The genre of the {} is {}. '.format(referall, genres[0])
 
     # etcetera
 
@@ -78,11 +75,7 @@ def main(parseargs):
 
     if albums is not None:
         if len(albums) > 1:
-            if len(albums) < 3:
-                abstract += 'Some albums of the {} are {} and {}. '.format(referall, ", ".join(albums[:-1]),
-                                                                           albums[-1])
-            else:
-                abstract += 'Some albums of the {} are {} and more. '.format(referall, ", ".join(albums[:4]))
+            abstract += 'Some albums of the {} are {} and {}. '.format(referall, ", ".join(albums[:2]),albums[-1])
         else:
             abstract += 'An album of the {} is {}. '.format(referall, albums[0])
 
