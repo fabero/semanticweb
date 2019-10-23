@@ -15,6 +15,7 @@ def main(parseargs):
 
     top_tracks = None
     albums = None
+    related_artists = None
 
     if(is_artist):
         referall = "artist"
@@ -22,18 +23,17 @@ def main(parseargs):
         members = None
         time_period = wikidata.get_artist_start_period(name)
         spotify_id = wikidata.get_artist_spotify_id(name)
-        if(spotify_id != ""):
-            top_tracks = spotify.get_top_tracks(spotify_id)
-            albums = spotify.get_artist_albums(spotify_id)
     else:
         referall = "band"
         genres = wikidata.get_band_genres(name)
         members = wikidata.get_band_members(name)
         time_period = wikidata.get_band_time_period(name)
         spotify_id = wikidata.get_band_spotify_id(name)
-        if (spotify_id != ""):
-            top_tracks = spotify.get_top_tracks(spotify_id)
-            albums = spotify.get_artist_albums(spotify_id)
+
+    if (spotify_id != ""):
+        top_tracks = spotify.get_top_tracks(spotify_id)
+        albums = spotify.get_artist_albums(spotify_id)
+        related_artists = spotify.get_related_artists(spotify_id)
 
     # This abstract will be constructed using the available information
     abstract = ''
@@ -78,6 +78,12 @@ def main(parseargs):
             abstract += 'Some albums of the {} are {} and {}. '.format(referall, ", ".join(albums[:2]),albums[-1])
         else:
             abstract += 'An album of the {} is {}. '.format(referall, albums[0])
+
+    if related_artists is not None:
+        if len(related_artists) > 1:
+            abstract += 'Related artists are {} and {}. '.format(", ".join(related_artists[:2]),related_artists[-1])
+        else:
+            abstract += 'A related artist is {}. '.format(referall, related_artists[0])
 
     print(abstract)
 
