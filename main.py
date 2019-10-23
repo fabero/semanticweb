@@ -18,6 +18,10 @@ def main(parseargs):
     related_artists = None
     popularity = None
     follower_total = None
+    danceability = None
+    danceableString = None
+    energy = None
+    energyString = None
 
     if(is_artist):
         referall = "artist"
@@ -82,6 +86,27 @@ def main(parseargs):
             abstract += '{}, {}, started performing in {}. '.format(name,extended_referall,time_period[0][0:4])
         else:
             abstract += 'It is unclear when {}, {}, started performing. '.format(name,extended_referall)
+
+    if(danceability is not None):
+        if(danceability > 0.5):
+            if(danceability > 0.8):
+                danceableString = "extremely danceable"
+            else:
+                danceableString = "very danceable"
+        else:
+            danceableString = "not very danceable"
+
+    if(energy is not None):
+        if(energy > 0.5):
+            if(energy > 0.8):
+                energyString = "extremely energetic"
+            else:
+                energyString = "very energetic"
+        else:
+            energyString = "not very energetic"
+
+    if(energyString is not None and danceableString is not None):
+        abstract += 'The {} is known for its {}, {} music. '.format(referall, energyString, danceableString)
 
     if top_tracks is not None:
         if len(top_tracks) > 1:
