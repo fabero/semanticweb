@@ -16,6 +16,8 @@ def main(parseargs):
     top_tracks = None
     albums = None
     related_artists = None
+    popularity = None
+    follower_total = None
 
     if(is_artist):
         referall = "artist"
@@ -30,10 +32,13 @@ def main(parseargs):
         time_period = wikidata.get_band_time_period(name)
         spotify_id = wikidata.get_band_spotify_id(name)
 
-    if (spotify_id != ""):
+    if (spotify_id != "" and spotify_id is not None):
         top_tracks = spotify.get_top_tracks(spotify_id)
         albums = spotify.get_artist_albums(spotify_id)
         related_artists = spotify.get_related_artists(spotify_id)
+        artist_data = spotify.get_artist(spotify_id)
+        popularity = artist_data['popularity']
+        follower_total = artist_data['followers']['total']
 
     # This abstract will be constructed using the available information
     abstract = ''
@@ -47,17 +52,33 @@ def main(parseargs):
 
     # if started_in:
 
+    extended_referall = referall
+
+    def popularityString(popularity):
+        result = " "
+        if(popularity is not None):
+            if(popularity < 50):
+                if(popularity > 30):
+                    result = " medium popular "
+                else:
+                    result = " not so popular "
+            else:
+                if(popularity > 80):
+                    result = " extremely popular "
+                else:
+                    result = " popular "
+        return result
+
+    if (spotify_id != ""):
+        if(genres is not None):
+            if(len(genres) > 0):
+                extended_referall = "a{}{} {}".format(popularityString(popularity), genres[0], referall)
+
     if time_period is not None:
         if len(time_period) > 0:
-            if genres is not None:
-                abstract += '{}, a {} {}, started performing in {}. '.format(name,genres[0],referall,time_period[0][0:4])
-            else:
-                abstract += '{} started performing in {}. '.format(name,time_period[0][0:4])
+            abstract += '{}, {}, started performing in {}. '.format(name,extended_referall,time_period[0][0:4])
         else:
-            if genres is not None:
-                abstract += 'It is unclear when {}, a {} {}, started performing. '.format(name,genres[0],referall)
-            else:
-                abstract += 'It is unclear when {} started performing. '.format(name)
+            abstract += 'It is unclear when {}, {}, started performing. '.format(name,extended_referall)
 
     if top_tracks is not None:
         if len(top_tracks) > 1:
