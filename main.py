@@ -14,6 +14,7 @@ def main(parseargs):
     label = wikidata.get_label(name)
 
     top_tracks = None
+    albums = None
 
     if(is_artist):
         referall = "artist"
@@ -23,6 +24,7 @@ def main(parseargs):
         spotify_id = wikidata.get_artist_spotify_id(name)
         if(spotify_id != ""):
             top_tracks = spotify.get_top_tracks(spotify_id)
+            albums = spotify.get_artist_albums(spotify_id)
     else:
         referall = "band"
         genres = wikidata.get_band_genres(name)
@@ -31,6 +33,7 @@ def main(parseargs):
         spotify_id = wikidata.get_band_spotify_id(name)
         if (spotify_id != ""):
             top_tracks = spotify.get_top_tracks(spotify_id)
+            albums = spotify.get_artist_albums(spotify_id)
 
     # This abstract will be constructed using the available information
     abstract = ''
@@ -50,6 +53,12 @@ def main(parseargs):
         else:
             abstract += 'It is unclear when {} started performing. '.format(name)
 
+    if top_tracks is not None:
+        if len(top_tracks) > 1:
+            abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(top_tracks[:2]), top_tracks[-1])
+        else:
+            abstract += 'The top track of the {} is {}. '.format(referall, top_tracks[0])
+
     if genres is not None:
         if len(genres) > 1:
             if len(genres) < 3:
@@ -67,14 +76,15 @@ def main(parseargs):
         else:
             abstract += '{} is the band member. '.format(", ".join(members[0]))
 
-    if top_tracks is not None:
-        if len(top_tracks) > 1:
-            if len(top_tracks) < 3:
-                abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(top_tracks[:-1]), top_tracks[-1])
+    if albums is not None:
+        if len(albums) > 1:
+            if len(albums) < 3:
+                abstract += 'Some albums of the {} are {} and {}. '.format(referall, ", ".join(albums[:-1]),
+                                                                           albums[-1])
             else:
-                abstract += 'Top tracks of the {} are {} and more. '.format(referall, ", ".join(top_tracks[:4]))
+                abstract += 'Some albums of the {} are {} and more. '.format(referall, ", ".join(albums[:4]))
         else:
-            abstract += 'The top track of the {} is {}. '.format(referall, top_tracks[0])
+            abstract += 'An album of the {} is {}. '.format(referall, albums[0])
 
     print(abstract)
 
