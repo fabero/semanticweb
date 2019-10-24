@@ -7,6 +7,8 @@ app = Flask(__name__)
 def welcome():
     return render_template('index.html')
 
-@app.route('/search/<query>')
-def web(query):
+@app.route('/search')
+def web():
+    query = request.args.get('q', '')
     return f'Result: {escape(main(query))}'
+
