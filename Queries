@@ -221,6 +221,24 @@ WHERE
 
 ------------------------------------------------------------------------------------------------------------------------------
 
+To find an //ARTIST\\ with wildcard after //JOHN M\\
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?item ?itemLabel
+WHERE 
+{
+   ?item wdt:P31 wd:Q5;
+         wdt:P106/wdt:P279* wd:Q639669 ;
+         rdfs:label ?itemLabel filter (lang(?itemLabel) = "en").
+   FILTER REGEX (?itemLabel, "^John T.").
+}
+LIMIT 10
+
+# NOOT, HELAAS NOG ERG TRAAG. FILTER REGEX WERKT WEL PRIMA, KUNST ZIT 'M IN DE CODE ERBOVEN
+
+------------------------------------------------------------------------------------------------------------------------------
+
 Best songs should we get from Spotify.
 Function of a band member not easy to get from Wiki.
     #SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". 
