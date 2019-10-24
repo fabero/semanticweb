@@ -1,5 +1,6 @@
-from flask import Flask, escape, request, render_template
+from flask import Flask, escape, request, render_template, jsonify
 from main import *
+from suggestions import *
 
 app = Flask(__name__)
 
@@ -12,3 +13,8 @@ def web():
     query = request.args.get('q', '')
     return f'Result: {escape(main(query))}'
 
+@app.route('/suggestions')
+def ajax():
+    query = request.args.get('q', '')
+    results = suggestions(query)
+    return jsonify(results)

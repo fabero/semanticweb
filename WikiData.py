@@ -12,6 +12,11 @@ class WikiData:
         PREFIX wd: <http://www.wikidata.org/entity/>
         """
 
+    # Search query
+    def search_artists(self, query):
+        test = ['John Beetle', 'John Mayer']
+        return test
+
     def check_if_artist(self, artist):
         self.sparql.setQuery(self.prefixes + """
             SELECT DISTINCT ?id ?idLabel ?genreLabel
