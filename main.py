@@ -6,8 +6,8 @@ wikidata = WikiData()
 spotify = Spotify()
 
 
-def main(parseargs):
-    name = parseargs.query.title()
+def main(query):
+    name = query.title()
 
     is_artist = wikidata.check_if_artist(name)
 
@@ -134,10 +134,12 @@ def main(parseargs):
         else:
             abstract += 'A related artist is {}. '.format(referall, related_artists[0])
 
-    print(abstract)
+    return abstract
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Fetch data on musical artists and bands.')
     parser.add_argument('query',  type=str, help='The band or artist to search for. Should be in quotes.')
     args = parser.parse_args()
-    main(args)
+    result = main(args.query)
+    print(result)
+
