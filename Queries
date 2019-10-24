@@ -5,10 +5,10 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?finalBandLabel
 WHERE
 {
-    ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
-    ?finalBand wdt:P31 ?band .
-    ?finalBand rdfs:label "The Who"@en .
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
+  ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
+  ?finalBand wdt:P31 ?band .
+  ?finalBand rdfs:label "The Who"@en .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -17,15 +17,14 @@ To find a //BAND\\ and its //GENRE\\
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT DISTINCT ?finalBandLabel ?finalGenreLabel
+SELECT DISTINCT ?finalBandLabel ?genreLabel
 WHERE
 {
     ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
     ?finalBand wdt:P31 ?band .
     ?finalBand rdfs:label "Pink Floyd"@en .
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
     ?finalBand wdt:P136 ?genre .
-    ?genre rdfs:label ?finalGenreLabel filter (lang(?finalGenreLabel) = "en").
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -50,17 +49,18 @@ To find a //BAND\\ and its //MEMBERS\\
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT DISTINCT ?finalBandLabel ?members
+SELECT DISTINCT ?finalBandLabel ?membersLabel
 WHERE
 {
     ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
     ?finalBand wdt:P31 ?band .
     ?finalBand rdfs:label "The Who"@en .
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
-    ?finalBand wdt:P527/rdfs:label ?members filter (lang(?members) = "en").
+    ?finalBand wdt:P527 ?members.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
+
 To find a //BAND\\ and its //StartWorkPeriod\\
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -71,9 +71,8 @@ WHERE
     ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
     ?finalBand wdt:P31 ?band .
     ?finalBand rdfs:label "The Who"@en .
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
     ?finalBand wdt:P2031 ?StartWorkPeriod .
-    #Beware that the output maybe nog in English.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -88,8 +87,8 @@ WHERE
     ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
     ?finalBand wdt:P31 ?band .
     ?finalBand rdfs:label "The Who"@en .
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
     ?finalBand wdt:P1902 ?spotify.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -104,8 +103,8 @@ WHERE
     ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
     ?finalBand wdt:P31 ?band .
     ?finalBand rdfs:label "The Who"@en .
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
     ?finalBand wdt:P434 ?musicbrainz.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -117,10 +116,10 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?id ?idLabel
 WHERE
 {
-       ?id wdt:P31 wd:Q5 .
-       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
-       ?id rdfs:label "John Mayer"@en .
-       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+    ?id wdt:P31 wd:Q5 .
+    ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+    ?id rdfs:label "John Mayer"@en .
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -135,9 +134,8 @@ WHERE
        ?id wdt:P31 wd:Q5 .
        ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
        ?id rdfs:label "John Mayer"@en .
-       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
        ?id wdt:P136 ?genre .
-       ?genre rdfs:label ?genreLabel filter (lang(?genreLabel) = "en").
+       SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -166,12 +164,11 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?id ?idLabel ?insLabel
 WHERE
 {
-       ?id wdt:P31 wd:Q5 .
-       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
-       ?id rdfs:label "John Mayer"@en .
-       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
-       ?id wdt:P1303 ?ins .
-       ?ins rdfs:label ?insLabel filter (lang(?insLabel) = "en").
+      ?id wdt:P31 wd:Q5 .
+      ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+      ?id rdfs:label "John Mayer"@en .
+      ?id wdt:P1303 ?ins .
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -183,13 +180,11 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?id ?idLabel ?StartWorkPeriod
 WHERE
 {
-       ?id wdt:P31 wd:Q5 .
-       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
-       ?id rdfs:label "John Mayer"@en .
-       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
-       ?id wdt:P2031 ?StartWorkPeriod .
-       #Beware that the output maybe not be in English.
-
+      ?id wdt:P31 wd:Q5 .
+      ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+      ?id rdfs:label "John Mayer"@en .
+      ?id wdt:P2031 ?StartWorkPeriod .
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -204,8 +199,8 @@ WHERE
        ?id wdt:P31 wd:Q5 .
        ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
        ?id rdfs:label "John Mayer"@en .
-       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
-       ?id wdt:P1902 ?spotify
+       ?id wdt:P1902 ?spotify 
+       SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -217,12 +212,30 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?id ?idLabel ?musicbrainz
 WHERE
 {
-       ?id wdt:P31 wd:Q5 .
-       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
-       ?id rdfs:label "John Mayer"@en .
-       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
-       ?id wdt:P434 ?musicbrainz
+      ?id wdt:P31 wd:Q5 .
+      ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+      ?id rdfs:label "John Mayer"@en .
+      ?id wdt:P434 ?musicbrainz
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
+
+------------------------------------------------------------------------------------------------------------------------------
+
+To find an //ARTIST\\ with wildcard after //JOHN M\\
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?item ?itemLabel
+WHERE 
+{
+   ?item wdt:P31 wd:Q5;
+         wdt:P106/wdt:P279* wd:Q639669 ;
+         rdfs:label ?itemLabel filter (lang(?itemLabel) = "en").
+   FILTER REGEX (?itemLabel, "^John T.").
+}
+LIMIT 10
+
+# NOOT, HELAAS NOG ERG TRAAG. FILTER REGEX WERKT WEL PRIMA, KUNST ZIT 'M IN DE CODE ERBOVEN
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -233,31 +246,26 @@ Function of a band member not easy to get from Wiki.
     
 
 ------------------------------------------------------------------------------------------------------------------------------
+
 SUPER QUERIES
 
 //BAND\\
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT DISTINCT ?finalBandLabel ?finalGenreLabel ?description ?members ?StartWorkPeriod ?spotify
+SELECT DISTINCT ?finalBandLabel ?genreLabel ?description ?membersLabel ?StartWorkPeriod ?spotify ?musicbrainz
 WHERE
 {
     ?band wdt:P279+ wd:Q2088357 . # get all subclasses of musical ensamble
     ?finalBand wdt:P31 ?band .
     ?finalBand rdfs:label "The Who"@en .
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
-  
     ?finalBand wdt:P136 ?genre .
-    ?genre rdfs:label ?finalGenreLabel filter (lang(?finalGenreLabel) = "en") .
-    
     ?finalBand schema:description ?description filter (lang(?description) = "en").
-  
-    ?finalBand rdfs:label ?finalBandLabel filter (lang(?finalBandLabel) = "en").
-    ?finalBand wdt:P527/rdfs:label ?members filter (lang(?members) = "en").
-  
+    ?finalBand wdt:P527 ?members .
     ?finalBand wdt:P2031 ?StartWorkPeriod .
-    
     ?finalBand wdt:P1902 ?spotify.
-
+    ?finalBand wdt:P434 ?musicbrainz
+  
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -266,29 +274,23 @@ WHERE
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT DISTINCT ?idLabel ?genreLabel ?description ?StartWorkPeriod ?spotify
+SELECT DISTINCT ?idLabel ?genreLabel ?description ?StartWorkPeriod ?spotify ?musicbrainz
 WHERE
 {
     ?id wdt:P31 wd:Q5 .
     ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
     ?id rdfs:label "John Mayer"@en .
-    ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
-    
-    OPTIONAL{
-    ?id wdt:P136 ?genre .
-    ?genre rdfs:label ?genreLabel filter (lang(?genreLabel) = "en") .
-    
-    ?id schema:description ?description filter (lang(?description) = "en").
   
-    ?id wdt:P1303 ?ins .
-    ?ins rdfs:label ?insLabel filter (lang(?insLabel) = "en").
+    OPTIONAL  {
+      ?id wdt:P136 ?genre .   
+      ?id schema:description ?description filter (lang(?description) = "en"). 
+      ?id wdt:P1303 ?ins .
+      ?id wdt:P2031 ?StartWorkPeriod .      
+      ?id wdt:P1902 ?spotify.
+      ?id wdt:P434 ?musicbrainz
+    }
   
-    ?id wdt:P2031 ?StartWorkPeriod .
-      
-    ?id wdt:P1902 ?spotify.
-      }
-
+SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
 }
-
 
 
