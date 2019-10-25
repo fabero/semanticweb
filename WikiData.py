@@ -22,7 +22,7 @@ class WikiData:
                          rdfs:label ?itemLabel filter (lang(?itemLabel) = "en").
                    FILTER regex (?itemLabel, """ +'"^(' + "|".join(query.split()) + ')"' + """).
                 }
-                LIMIT 10
+                LIMIT 100
         """)
 
         results = self.sparql.query().convert()['results']['bindings']
