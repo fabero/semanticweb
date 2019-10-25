@@ -42,25 +42,54 @@
     </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/typeahead.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-typeahead.min.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
         $('.typeahead').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1
-        }, {
-            source: function (query) {
-                return $.getJSON(
-                    'suggestions',
-                    {query: query},
-                    function (data) {
-                        console.log(data);
-                        return data;
-                    });
+
+            // data source
+            source: [],
+
+            // how many items to display
+            items: 10,
+
+            // enable scrollbar
+            scrollBar: false,
+
+            // equalize the dropdown width
+            alignWidth: true,
+
+            // typeahead dropdown template
+            menu: '<ul class="typeahead dropdown-menu"></ul>',
+            item: '<li><a href="#"></a></li>',
+
+            // The object property that is returned when an item is selected.
+            valueField: 'id',
+
+            // The object property to match the query against and highlight in the results.
+            displayField: 'q',
+
+            // auto select
+            autoSelect: true,
+
+            // callback
+            onSelect: function () {
+            },
+
+            // ajax options
+            ajax: {
+                url: 'suggestions',
+                timeout: 300,
+                method: 'get',
+                triggerLength: 1,
+                loadingClass: null,
+                preDispatch: null,
+                preProcess: null
             }
+
         });
+
     });
 </script>
 

@@ -14,17 +14,26 @@ class WikiData:
 
     # Search query
     def search_artists(self, query):
-        states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-                  'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-                  'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-                  'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-                  'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-                  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-                  'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-                  'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-                  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-                  ]
-        return states
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?item ?itemLabel
+                WHERE 
+                {
+                   ?item wdt:P31 wd:Q5;
+                         wdt:P106/wdt:P279* wd:Q639669 ;
+                         rdfs:label ?itemLabel filter (lang(?itemLabel) = "en").
+                   FILTER REGEX (?itemLabel, """ +'"^' + query + '"' + """).
+                }
+                LIMIT 10
+        """)
+
+        results = self.sparql.query().convert()['results']['bindings']
+        suggestions = []
+        if len(results) > 0:
+            for item in results:
+                suggestions.append(item['itemLabel']['value'])
+            return suggestions
+        return None
+
 
     def check_if_artist(self, artist):
         self.sparql.setQuery(self.prefixes + """
