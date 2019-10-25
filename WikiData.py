@@ -1,6 +1,5 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 
-
 class WikiData:
     """Interacts with WikiData"""
     def __init__(self):
@@ -11,6 +10,30 @@ class WikiData:
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX wd: <http://www.wikidata.org/entity/>
         """
+
+    # Search query
+    def search_artists(self, query):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?item ?itemLabel
+                WHERE 
+                {
+                   ?item wdt:P31 wd:Q5;
+                         wdt:P106/wdt:P279* wd:Q639669 ;
+                         rdfs:label ?itemLabel filter (lang(?itemLabel) = "en").
+                   FILTER regex (?itemLabel, """ +'"^(' + "|".join(query.split()) + ')"' + """).
+                }
+                LIMIT 10
+        """)
+
+        results = self.sparql.query().convert()['results']['bindings']
+        suggestions = []
+        if len(results) > 0:
+            for item in results:
+                suggestions.append(item['itemLabel']['value'])
+            print(suggestions)
+            return suggestions
+        return None
+
 
     def check_if_artist(self, artist):
         self.sparql.setQuery(self.prefixes + """
