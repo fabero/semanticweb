@@ -2,6 +2,12 @@ body {
     background: white
 }
 
+.margin-top {
+    margin-top: 60px;
+}
+.text-center {
+    text-align: center;
+}
 .tt-query, /* UPDATE: newer versions use tt-input instead of tt-query */
 .tt-hint {
     width: 396px;
@@ -48,4 +54,49 @@ body {
 .tt-suggestion p {
     margin: 0;
 }
+.loading {
+    opacity: 0;
+    position: absolute;
+    width: calc(100% - 30px);
+    height: 0;
+    background: #FFF;
+    border: 1px solid #CCC;
+    transition: all .3s ease-in-out;
+}
+.loading .spinner {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+    border-radius: 50%;
+    background-color: #0097cf;
+    width: 20px;
+    height: 20px;
+    animation: loadAnimation 1s infinite ease-in-out;
+    transition: all .3s ease-in-out;
+}
+.tt-loading + .dropdown-menu + .loading {
+    opacity: 1;
+    height: 80px;
+    transition: all .3s ease-in-out;
+}
+.tt-loading + .dropdown-menu + .loading .spinner {
+    top: 30px;
+    transition: all .3s ease-in-out;
+}
 
+@keyframes loadAnimation {
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+    25% {
+        transform: translateX(-50%) scale(0.6);
+    }
+    75% {
+        transform: translateX(-50%) scale(0.6);
+    }
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
+}
