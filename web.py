@@ -15,6 +15,6 @@ def web():
 
 @app.route('/suggestions')
 def ajax():
-    query = request.args.get('q', '')
+    query = request.args.get('query', '')
     results = suggestions(query)
     return jsonify(results)

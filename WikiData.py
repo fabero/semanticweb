@@ -1,6 +1,5 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 
-
 class WikiData:
     """Interacts with WikiData"""
     def __init__(self):
@@ -21,7 +20,7 @@ class WikiData:
                    ?item wdt:P31 wd:Q5;
                          wdt:P106/wdt:P279* wd:Q639669 ;
                          rdfs:label ?itemLabel filter (lang(?itemLabel) = "en").
-                   FILTER REGEX (?itemLabel, """ +'"^' + query + '"' + """).
+                   FILTER regex (?itemLabel, """ +'"^(' + "|".join(query.split()) + ')"' + """).
                 }
                 LIMIT 10
         """)
@@ -31,6 +30,7 @@ class WikiData:
         if len(results) > 0:
             for item in results:
                 suggestions.append(item['itemLabel']['value'])
+            print(suggestions)
             return suggestions
         return None
 
