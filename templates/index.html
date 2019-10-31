@@ -27,7 +27,7 @@
         <div class="col-12 text-center">
             <h2>Artist Descriptor</h2>
             <h5>Enter your favorite artist to continue</h5>
-            <p>(examples: Bob Dylan, Coldplay, Pink Floyd)</p>
+            <p>(examples: <a onclick="getSummary('Olivia Newton-John')">Olivia Newton-John</a>, <a onclick="getSummary('Bob Dylan')">Bob Dylan</a>,  <a onclick="getSummary('Coldplay')">Coldplay</a>, <a onclick="getSummary('Pink Floyd')">Pink Floyd</a>)</p>
         </div>
     </div>
     <div class="row">
@@ -55,7 +55,10 @@
     <div class="row">
         <div class="col-10 offset-1 col-md-6 offset-md-3">
             <div id="results">
-
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Fetching data...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -65,7 +68,10 @@
 
 <script type="text/javascript">
     function getSummary(q) {
-        $('#results').html('Fetching data...');
+        $('#results').html(" <div class=\"loading active\">\n" +
+            "                    <div class=\"spinner\"></div>\n" +
+            "                    <p>Fetching data...</p>\n" +
+            "                </div>");
         $.ajax({
             type: "GET",
             url: '/search',
@@ -83,9 +89,9 @@
 
     $(document).ready(function () {
         $('.artist-form').on('submit', function () {
-                updateSummary();
-                return false;
-            });
+            updateSummary();
+            return false;
+        });
         $('.typeahead').typeahead({
 
             // data source

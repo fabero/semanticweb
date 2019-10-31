@@ -99,7 +99,7 @@ def main(query):
             else:
                 danceableString = "very danceable"
         else:
-            danceableString = "not very danceable"
+            danceableString = "not danceable"
 
     if(energy is not None):
         if(energy > 0.5):
@@ -108,7 +108,7 @@ def main(query):
             else:
                 energyString = "very energetic"
         else:
-            energyString = "not very energetic"
+            energyString = "calm"
 
     if(energyString is not None and danceableString is not None):
         abstract += 'The {} is known for its {}, {} music. '.format(referall, energyString, danceableString)
@@ -127,7 +127,7 @@ def main(query):
         if len(members) > 1:
             abstract += 'Members of the band are {} and {}. '.format(", ".join(members[:-1]),members[-1])
         else:
-            abstract += '{} is the band member. '.format(", ".join(members[0]))
+            abstract += '{} is the band member. '.format(members[0])
 
     if albums is not None:
         if len(albums) > 1:
@@ -140,7 +140,8 @@ def main(query):
             abstract += 'Related artists are {} and {}. '.format(", ".join(related_artists[:2]),related_artists[-1])
         else:
             abstract += 'A related artist is {}. '.format(referall, related_artists[0])
-
+    if(len(abstract) < 5):
+        abstract += 'Unable to find any information related to the query.'
     return abstract
 
 

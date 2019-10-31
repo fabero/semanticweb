@@ -4,11 +4,29 @@ body {
 body p {
     color: #848484;
 }
+body a {
+    color: #0097cf !important;
+    cursor: pointer;
+    text-decoration: underline !important;
+}
 body form input[type=text] {
     width: calc(100% + 15px);
 }
 body form .typeahead.dropdown-menu {
     width: calc(100% + 15px);
+}
+
+body #results .loading {
+    opacity: 0;
+    border: none;
+    margin-top: 30px;
+}
+body #results .loading p {
+    text-align: center;
+    margin-top: 30px;
+}
+body #results .loading.active {
+    opacity: 1;
 }
 .margin-top {
     margin-top: 60px;
