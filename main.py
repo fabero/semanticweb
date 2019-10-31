@@ -103,7 +103,7 @@ def main(query):
             else:
                 danceableString = "very danceable"
         else:
-            danceableString = "not very danceable"
+            danceableString = "not danceable"
 
     if(energy is not None):
         if(energy > 0.5):
@@ -112,7 +112,7 @@ def main(query):
             else:
                 energyString = "very energetic"
         else:
-            energyString = "not very energetic"
+            energyString = "calm"
 
     if(energyString is not None and danceableString is not None):
         abstract += 'The {} is known for its {}, {} music. '.format(referall, energyString, danceableString)
