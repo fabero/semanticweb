@@ -10,8 +10,8 @@ def welcome():
 
 @app.route('/search')
 def web():
-    query = request.args.get('q', '')
-    return f'{escape(main(query))}'
+    query = request.args.get('q')
+    return f'{main(query)}'
 
 @app.route('/suggestions')
 def ajax():

@@ -142,8 +142,10 @@ def main(query):
             abstract += 'Related artists are {} and {}. '.format(", ".join(related_artists[:2]),related_artists[-1])
         else:
             abstract += 'A related artist is {}. '.format(referall, related_artists[0])
-
+    if(len(abstract) < 5):
+        abstract += 'Unable to find any information related to the query.'
     return abstract
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Fetch data on musical artists and bands.')
