@@ -6,13 +6,9 @@ Run via Python
 $ python main.py "Artist name"
 ```
 
-## Getting started
-- Set up .env file: copy contents of `.env.example` to `.env`
-- New `.env` file should contain
-```env
-FLASK_APP = web.py
-```
-- Serve web interface
+Run via web interface
 ```bash
-$ flask run
+$ python web.py
 ```
+
+Then go to http://localhost:8080
