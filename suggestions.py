@@ -11,7 +11,7 @@ def suggestions(query):
     print('Fetching suggestions for: ')
     print(name)
 
-    artists = wikidata.search_artists(name)
-
+    # artists = wikidata.search_artists(name)
+    artists = spotify.search(name)
     return artists
 
