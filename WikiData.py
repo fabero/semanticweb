@@ -197,7 +197,7 @@ class WikiData:
             {
                    ?id wdt:P31 wd:Q5 .
                    ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
-                   ?id rdfs:label """ +'"' + artist + '"' + """@en .
+                   ?id rdfs:label """ + '"' + artist + '"' + """@en .
                    ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
                    ?id wdt:P2031 ?StartWorkPeriod .
                    #Beware that the output maybe not be in English.
@@ -214,3 +214,22 @@ class WikiData:
             if len(period) > 0:
                 return period
         return None
+
+    def get_musicbrainz_id(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+        SELECT DISTINCT ?id ?idLabel ?musicbrainz
+            WHERE
+                {
+                       ?id wdt:P31 wd:Q5 .
+                       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+                       ?id rdfs:label """ + '"' + artist + '"' + """@en .
+                       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+                       ?id wdt:P434 ?musicbrainz
+                }""")
+        results = self.sparql.query().convert()['results']['bindings']
+        if len(results) > 0:
+            for item in results:
+                if item['musicbrainz']:
+                    return item['musicbrainz']['value']
+        return None
+
