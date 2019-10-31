@@ -124,12 +124,11 @@ def main(query):
             abstract += 'The top track of the {} is {}. '.format(referall, top_tracks[0])
 
     # etcetera
-
     if members is not None:
         if len(members) > 1:
             abstract += 'Members of the band are {} and {}. '.format(", ".join(members[:-1]),members[-1])
         else:
-            abstract += '{} is the band member. '.format(", ".join(members[0]))
+            abstract += '{} is the band member. '.format(members[0])
 
     if albums is not None:
         if len(albums) > 1:
