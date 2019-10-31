@@ -1,7 +1,9 @@
 body {
     background: white
 }
-
+body p {
+    color: #848484;
+}
 .margin-top {
     margin-top: 60px;
 }
