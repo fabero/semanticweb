@@ -10,6 +10,19 @@ body form input[type=text] {
 body form .typeahead.dropdown-menu {
     width: calc(100% + 15px);
 }
+
+body #results .loading {
+    opacity: 0;
+    border: none;
+    margin-top: 30px;
+}
+body #results .loading p {
+    text-align: center;
+    margin-top: 30px;
+}
+body #results .loading.active {
+    opacity: 1;
+}
 .margin-top {
     margin-top: 60px;
 }
