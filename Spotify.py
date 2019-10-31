@@ -96,6 +96,19 @@ class Spotify:
             return sum(features.get('danceability'))/len(features.get('danceability')),\
                    sum(features.get('energy'))/len(features.get('energy'))
 
+    def search(self, query):
+        query_transformed = query.replace(' ', '%20')
+        search_url = f'https://api.spotify.com/v1/search?q={query_transformed}&type=artist&limit=10'
+        response = requests.get(search_url, headers=self.default_headers).json()
+        filtered_artists = []
+        if response is not None:
+            artists = response.get('artists').get('items')
+            for artist in artists:
+                if artist.get('popularity') > 50:
+                    filtered_artists.append(artist.get('name'))
+        if len(filtered_artists) > 0:
+            return filtered_artists
+        return None
 
 
 def b64encode(msg: str) -> str:

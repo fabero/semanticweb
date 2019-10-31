@@ -1,10 +1,27 @@
 import argparse
 from Spotify import *
 from WikiData import *
+from MusicBrainz import *
 
 wikidata = WikiData()
 spotify = Spotify()
+musicbrainz = MusicBrainz()
 
+
+def popularityString(popularity):
+    result = " "
+    if (popularity is not None):
+        if (popularity < 50):
+            if (popularity > 30):
+                result = " medium popular "
+            else:
+                result = " not so popular "
+        else:
+            if (popularity > 80):
+                result = " extremely popular "
+            else:
+                result = " popular "
+    return result
 
 def main(query):
     name = query.title()
@@ -22,6 +39,7 @@ def main(query):
     danceableString = None
     energy = None
     energyString = None
+    musicbrainz_id = None
 
     if(is_artist):
         referall = "artist"
@@ -35,6 +53,11 @@ def main(query):
         members = wikidata.get_band_members(name)
         time_period = wikidata.get_band_time_period(name)
         spotify_id = wikidata.get_band_spotify_id(name)
+
+    # If no Spotify ID is found, try to get it using MusicBrainz
+    musicbrainz_id = wikidata.get_musicbrainz_id(name)
+    if spotify_id is None and musicbrainz_id is not None:
+        spotify_id = musicbrainz.get_spotify_id(musicbrainz_id)
 
     if (spotify_id != "" and spotify_id is not None):
         top_tracks = spotify.get_top_tracks(spotify_id)
@@ -61,20 +84,6 @@ def main(query):
 
     extended_referall = referall
 
-    def popularityString(popularity):
-        result = " "
-        if(popularity is not None):
-            if(popularity < 50):
-                if(popularity > 30):
-                    result = " medium popular "
-                else:
-                    result = " not so popular "
-            else:
-                if(popularity > 80):
-                    result = " extremely popular "
-                else:
-                    result = " popular "
-        return result
 
     if (spotify_id != ""):
         if(genres is not None):
