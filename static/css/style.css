@@ -4,6 +4,12 @@ body {
 body p {
     color: #848484;
 }
+body form input[type=text] {
+    width: calc(100% + 15px);
+}
+body form .typeahead.dropdown-menu {
+    width: calc(100% + 15px);
+}
 .margin-top {
     margin-top: 60px;
 }
@@ -59,9 +65,10 @@ body p {
 .loading {
     opacity: 0;
     position: absolute;
-    width: calc(100% - 30px);
+    width: calc(100% - 15px);
     height: 0;
     background: #FFF;
+    z-index: 999;
     border: 1px solid #CCC;
     transition: all .3s ease-in-out;
 }
