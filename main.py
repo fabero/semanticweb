@@ -27,7 +27,17 @@ def popularityString(popularity):
 def main(query, returnHTML = False):
     name = query.title()
 
+    tracelog = []
+
+    tracelog.append('Fetching Wikidata for query \'{}\'...'.format(name))
+
     is_artist = wikidata.check_if_artist(name)
+
+    tracelog.append('Checking whether query is artist or band...')
+    if is_artist:
+        tracelog.append('{} is an artist.'.format(name))
+    else:
+        tracelog.append('{} is a band.'.format(name))
 
     label = wikidata.get_label(name)
 
@@ -46,14 +56,26 @@ def main(query, returnHTML = False):
 
     if(is_artist):
         referall = "artist"
+        tracelog.append('Fetching artist genres from Wikidata...')
         genres = wikidata.get_artist_genres(name)
+        if(len(genres) > 0):
+            tracelog.append('Found genres: {} and {}.'.format(", ".join(genres[:-1]), genres[-1]))
+        else:
+            tracelog.append('No genres found.')
         members = None
         time_period = wikidata.get_artist_start_period(name)
         spotify_id = wikidata.get_artist_spotify_id(name)
     else:
         referall = "band"
+        tracelog.append('Fetching band genres from Wikidata...')
         genres = wikidata.get_band_genres(name)
+        tracelog.append('Found genres: {}, and {}'.format(genres[:-1], genres[-1]))
+        tracelog.append('Fetching band members from Wikidata...')
         members = wikidata.get_band_members(name)
+        if(len(members) > 0):
+            tracelog.append('Found members: {}, and {}'.format(genres[:-1], genres[-1]))
+        else:
+            tracelog.append('No genres found.')
         time_period = wikidata.get_band_time_period(name)
         spotify_id = wikidata.get_band_spotify_id(name)
 
@@ -160,8 +182,17 @@ def main(query, returnHTML = False):
         abstract += 'Unable to find any information related to the query.'
 
     if(returnHTML):
+        tracelog_Html = ''
+        traceList = []
+        for trace in range(len(tracelog)):
+            traceList.append('<li>{}</li>'.format(tracelog[trace]))
+        tracelog_Html += "".join(traceList)
         print('Returning HTML output...')
-        return '<p>{}</p>'.format(abstract)
+        html = '<p>{}</p>'.format(abstract)
+        html += '<ul class="tracelog closed">'
+        html += tracelog_Html
+        html += '</ul>'
+        return html
     return abstract
 
 
