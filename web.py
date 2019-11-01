@@ -11,7 +11,7 @@ def welcome():
 @app.route('/search')
 def web():
     query = request.args.get('q')
-    return f'{main(query)}'
+    return f'{main(query, True)}'
 
 @app.route('/suggestions')
 def ajax():

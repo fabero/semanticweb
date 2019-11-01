@@ -24,7 +24,7 @@ def popularityString(popularity):
     return result
 
 
-def main(query):
+def main(query, returnHTML = False):
     name = query.title()
 
     is_artist = wikidata.check_if_artist(name)
@@ -142,6 +142,10 @@ def main(query):
             abstract += 'A related artist is {}. '.format(referall, related_artists[0])
     if(len(abstract) < 5):
         abstract += 'Unable to find any information related to the query.'
+
+    if(returnHTML):
+        print('Returning HTML output...')
+        return '<p>{}</p>'.format(abstract)
     return abstract
 
 
