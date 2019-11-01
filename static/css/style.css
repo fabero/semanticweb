@@ -15,7 +15,14 @@ body form input[type=text] {
 body form .typeahead.dropdown-menu {
     width: calc(100% + 15px);
 }
-
+body #results p {
+    color: #000;
+}
+body #results .tracelog li {
+    color: #848484;
+    font-size: 12px;
+    list-style-type: none;
+}
 body #results .loading {
     opacity: 0;
     border: none;

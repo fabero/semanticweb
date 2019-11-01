@@ -25,10 +25,24 @@ def popularityString(popularity):
 
 
 def main(query, returnHTML = False):
-    name = query.title()
+    if(query[0].isupper()):
+        name = query
+    else:
+        name = query.title()
+
+    tracelog = []
+
+    tracelog.append('Fetching Wikidata for query \'{}\'...'.format(name))
+    tracelog.append('---')
 
     is_artist = wikidata.check_if_artist(name)
 
+    tracelog.append('Checking whether query is artist or band...')
+    if is_artist:
+        tracelog.append('{} is an artist.'.format(name))
+    else:
+        tracelog.append('{} is a band.'.format(name))
+    tracelog.append('---')
     label = wikidata.get_label(name)
 
     track_names = None
@@ -46,15 +60,51 @@ def main(query, returnHTML = False):
 
     if(is_artist):
         referall = "artist"
+        tracelog.append('Fetching artist genres from Wikidata...')
         genres = wikidata.get_artist_genres(name)
+        if genres is not None and len(genres) > 0:
+            tracelog.append('Found genres: {} and {}.'.format(", ".join(genres[:-1]), genres[-1]))
+        else:
+            tracelog.append('No genres found.')
+        tracelog.append('---')
+
         members = None
+
+        tracelog.append('Fetching \'start period\' of artist from Wikidata...')
         time_period = wikidata.get_artist_start_period(name)
+        if time_period is not None and len(time_period) > 0:
+            tracelog.append('Start period found: {}.'.format(", ".join(time_period)))
+        else:
+            tracelog.append('No start period found.')
+        tracelog.append('---')
+
         spotify_id = wikidata.get_artist_spotify_id(name)
     else:
         referall = "band"
+        tracelog.append('Fetching band genres from Wikidata...')
         genres = wikidata.get_band_genres(name)
+        if genres is not None and (len(genres) > 0):
+            tracelog.append('Found genres: {} and {}.'.format(", ".join(genres[:-1]), genres[-1]))
+        else:
+            tracelog.append('No genres found.')
+        tracelog.append('---')
+
+        tracelog.append('Fetching band members from Wikidata...')
         members = wikidata.get_band_members(name)
+        if members is not None and len(members) > 0:
+            tracelog.append('Found members: {} and {}.'.format(", ".join(members[:-1]), members[-1]))
+        else:
+            tracelog.append('No genres found.')
+        tracelog.append('---')
+
+        tracelog.append('Fetching \'start period\' of band from Wikidata...')
         time_period = wikidata.get_band_time_period(name)
+        if time_period is not None and len(time_period) > 0:
+            tracelog.append('Start period found: {}.'.format(", ".join(time_period)))
+        else:
+            tracelog.append('No start period found.')
+        tracelog.append('---')
+
         spotify_id = wikidata.get_band_spotify_id(name)
 
     # If no Spotify ID is found, try to get it using MusicBrainz
@@ -160,8 +210,17 @@ def main(query, returnHTML = False):
         abstract += 'Unable to find any information related to the query.'
 
     if(returnHTML):
+        tracelog_Html = ''
+        traceList = []
+        for trace in range(len(tracelog)):
+            traceList.append('<li>{}</li>'.format(tracelog[trace]))
+        tracelog_Html += "".join(traceList)
         print('Returning HTML output...')
-        return '<p>{}</p>'.format(abstract)
+        html = '<p>{}</p>'.format(abstract)
+        html += '<ul class="tracelog closed">'
+        html += tracelog_Html
+        html += '</ul>'
+        return html
     return abstract
 
 
