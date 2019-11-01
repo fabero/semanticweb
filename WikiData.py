@@ -206,7 +206,7 @@ class WikiData:
                     if item['gender']['value'] == 'http://www.wikidata.org/entity/Q6581072':
                         return 'female'
                     elif item['gender']['value'] == 'http://www.wikidata.org/entity/Q6581097':
-                        'male'
+                        return 'male'
                     else:
                         'other'
         return None
