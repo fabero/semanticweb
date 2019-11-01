@@ -256,3 +256,24 @@ class WikiData:
                     return item['musicbrainz']['value']
         return None
 
+    def get_artist_instruments(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?id ?idLabel ?insLabel
+                WHERE
+                    {
+                        ?id wdt:P31 wd:Q5 .
+                        ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+                        ?id rdfs:label """ + '"' + artist + '"' + """@en .
+                        ?id wdt:P1303 ?ins .
+                        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".}
+                    }
+            """)
+        results = self.sparql.query().convert()['results']['bindings']
+        instr = []
+        if len(results) > 0:
+            for item in results:
+                if item['insLabel']:
+                    instr.append(item['insLabel']['value'])
+            if len(instr) > 0:
+                return instr
+        return None
