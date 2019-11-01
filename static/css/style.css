@@ -35,6 +35,15 @@ body #results .loading p {
 body #results .loading.active {
     opacity: 1;
 }
+body #results #tracelog {
+    margin: 15px 0;
+}
+body #results #tracelog ul {
+    padding: 0 !important;
+}
+body #results #tracelog ul li {
+    padding: 0 !important;
+}
 .margin-top {
     margin-top: 60px;
 }

@@ -259,9 +259,12 @@ def main(query, returnHTML=False):
         tracelog_Html += "".join(traceList)
         print('Returning HTML output...')
         html = '<p>{}</p>'.format(abstract)
-        html += '<ul class="tracelog closed">'
+        html += '<a data-toggle="collapse" href="#tracelog" role="button" aria-expanded="false" aria-controls="tracelog">Toggle tracelog</a>'
+        html += '<div class="collapse" id="tracelog">'
+        html += '<ul class="tracelog">'
         html += tracelog_Html
         html += '</ul>'
+        html += '</div>'
         return html
     return abstract
 
