@@ -101,7 +101,7 @@ class Spotify:
 
     def search(self, query):
         query_transformed = query.replace(' ', '%20')
-        search_url = f'https://api.spotify.com/v1/search?q={query_transformed}&type=artist&limit=10'
+        search_url = f'https://api.spotify.com/v1/search?q={query_transformed}*&type=artist&limit=10'
         response = requests.get(search_url, headers=self.default_headers).json()
         filtered_artists = []
         if response is not None:
