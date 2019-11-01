@@ -187,6 +187,30 @@ class WikiData:
                     return item['spotify']['value']
         return None
 
+    def get_gender(self, artist):
+        self.sparql.setQuery(self.prefixes + """
+            SELECT DISTINCT ?gender
+                WHERE
+                {
+                       ?id wdt:P31 wd:Q5 .
+                       ?id wdt:P106/wdt:P279* wd:Q639669 . # artists
+                       ?id rdfs:label """ +'"' + artist + '"' + """@en .
+                       ?id rdfs:label ?idLabel filter (lang(?idLabel) = "en").
+                       ?id wdt:P21 ?gender
+                }
+        """)
+        results = self.sparql.query().convert()['results']['bindings']
+        if len(results) > 0:
+            for item in results:
+                if item['gender']:
+                    if item['gender']['value'] == 'http://www.wikidata.org/entity/Q6581072':
+                        return 'female'
+                    elif item['gender']['value'] == 'http://www.wikidata.org/entity/Q6581097':
+                        return 'male'
+                    else:
+                        return 'other'
+        return None
+
     def get_artist_genres(self, artist):
         self.sparql.setQuery(self.prefixes + """
             SELECT DISTINCT ?id ?idLabel ?genreLabel

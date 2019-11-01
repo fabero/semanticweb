@@ -43,10 +43,12 @@ def main(query, returnHTML = False):
     energy = None
     energyString = None
     musicbrainz_id = None
+    gender = None
 
     if(is_artist):
         referall = "artist"
         genres = wikidata.get_artist_genres(name)
+        gender = wikidata.get_gender(name)
         members = None
         time_period = wikidata.get_artist_start_period(name)
         spotify_id = wikidata.get_artist_spotify_id(name)
