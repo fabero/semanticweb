@@ -116,8 +116,10 @@ def main(query, returnHTML = False):
         albums = spotify.get_artist_albums(spotify_id)
         related_artists = spotify.get_related_artists(spotify_id)
         artist_data = spotify.get_artist(spotify_id)
-        popularity = artist_data['popularity']
-        follower_total = artist_data['followers']['total']
+        popularity = None
+        if(artist_data is not None):
+            popularity = artist_data['popularity']
+            follower_total = artist_data['followers']['total']
         if (spotify_id != ""):
             tracks = spotify.get_top_tracks(spotify_id)
             track_names = [track[0] for track in tracks]
