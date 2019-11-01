@@ -80,7 +80,7 @@ def main(query, returnHTML = False):
         referall = "band"
         tracelog.append('Fetching band genres from Wikidata...')
         genres = wikidata.get_band_genres(name)
-        if (len(genres) > 0):
+        if genres is not None and (len(genres) > 0):
             tracelog.append('Found genres: {} and {}.'.format(", ".join(genres[:-1]), genres[-1]))
         else:
             tracelog.append('No genres found.')
