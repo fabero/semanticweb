@@ -18,7 +18,7 @@ def popularityString(popularity):
                 result = " not so popular "
         else:
             if (popularity > 80):
-                result = " extremely popular "
+                result = "n extremely popular "
             else:
                 result = " popular "
     return result
