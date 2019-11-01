@@ -7,6 +7,12 @@ wikidata = WikiData()
 spotify = Spotify()
 musicbrainz = MusicBrainz()
 
+def logArrayToTrace(arr, tracel, strname):
+    if arr is not None and (len(arr) > 0):
+        tracel.append('Found {}: {} and {}.'.format(strname, ", ".join(arr[:-1]), arr[-1]))
+    else:
+        tracel.append('No {} found.'.format(strname))
+    tracel.append('---')
 
 def popularityString(popularity):
     result = " "
@@ -59,11 +65,7 @@ def main(query, returnHTML=False):
         referall = "artist"
         tracelog.append('Fetching artist genres from Wikidata...')
         genres = wikidata.get_artist_genres(name)
-        if genres is not None and len(genres) > 0:
-            tracelog.append('Found genres: {} and {}.'.format(", ".join(genres[:-1]), genres[-1]))
-        else:
-            tracelog.append('No genres found.')
-        tracelog.append('---')
+        logArrayToTrace(genres, tracelog, 'genres')
 
         members = None
 
@@ -80,19 +82,11 @@ def main(query, returnHTML=False):
         referall = "band"
         tracelog.append('Fetching band genres from Wikidata...')
         genres = wikidata.get_band_genres(name)
-        if genres is not None and (len(genres) > 0):
-            tracelog.append('Found genres: {} and {}.'.format(", ".join(genres[:-1]), genres[-1]))
-        else:
-            tracelog.append('No genres found.')
-        tracelog.append('---')
+        logArrayToTrace(genres, tracelog, 'genres')
 
         tracelog.append('Fetching band members from Wikidata...')
         members = wikidata.get_band_members(name)
-        if members is not None and len(members) > 0:
-            tracelog.append('Found members: {} and {}.'.format(", ".join(members[:-1]), members[-1]))
-        else:
-            tracelog.append('No genres found.')
-        tracelog.append('---')
+        logArrayToTrace(members, tracelog, 'members')
 
         tracelog.append('Fetching \'start period\' of band from Wikidata...')
         time_period = wikidata.get_band_time_period(name)
@@ -116,7 +110,7 @@ def main(query, returnHTML=False):
     if musicbrainz_id is not None:
         tracelog.append('MusicBrainz ID found: {}'.format(musicbrainz_id))
     else:
-        tracelog.append('MusicBrainz ID found.')
+        tracelog.append('No MusicBrainz ID found.')
     tracelog.append('---')
 
     if spotify_id is None and musicbrainz_id is not None:
@@ -125,13 +119,26 @@ def main(query, returnHTML=False):
         if spotify_id is not None:
             tracelog.append('Spotify ID found: {}'.format(spotify_id))
         else:
-            tracelog.append('No spotify ID found.')
+            tracelog.append('No Spotify ID found.')
         tracelog.append('---')
 
     if spotify_id != "" and spotify_id is not None:
+        tracelog.append('Fetching albums from Spotify...')
         albums = spotify.get_artist_albums(spotify_id)
+        logArrayToTrace(albums, tracelog, 'albums')
+
+        tracelog.append('Fetching related artists from Spotify...')
         related_artists = spotify.get_related_artists(spotify_id)
+        logArrayToTrace(related_artists, tracelog, 'related artists')
+
+        tracelog.append('Fetching artist data from Spotify...')
         artist_data = spotify.get_artist(spotify_id)
+        if len(artist_data) > 0:
+            tracelog.append('Artist data found: {}'.format(artist_data))
+        else:
+            tracelog.append('No artist data found.')
+        tracelog.append('---')
+
         popularity = None
         if artist_data is not None:
             popularity = artist_data['popularity']
@@ -148,11 +155,16 @@ def main(query, returnHTML=False):
 
     extended_referall = referall
 
+    tracelog.append('Generating referall term for query...')
     if spotify_id != "":
         if genres is not None:
             if len(genres) > 0:
                 extended_referall = "a{}{} {}".format(popularityString(popularity), genres[0], referall)
 
+    tracelog.append('Referall terms: \'{}\' and \'{}\''.format(referall, extended_referall))
+    tracelog.append('---')
+
+    tracelog.append('Generating summary for query...')
     if time_period is not None:
         if len(time_period) > 0:
             abstract += '{}, {}, started performing in {}. '.format(name, extended_referall, time_period[0][0:4])
@@ -228,8 +240,16 @@ def main(query, returnHTML=False):
                                                                      related_artists[-1])
             else:
                 abstract += 'A related artist is {}. '.format(related_artists[0])
+
+    tracelog.append('Outputting summary...')
+    tracelog.append('---')
+
     if len(abstract) < 5:
+        tracelog.append('FAIL')
         abstract += 'Unable to find any information related to the query.'
+    else:
+        tracelog.append('SUCCESS')
+    tracelog.append('---')
 
     if returnHTML:
         tracelog_Html = ''
