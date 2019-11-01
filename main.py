@@ -60,6 +60,7 @@ def main(query, returnHTML=False):
     energy = None
     energyString = None
     musicbrainz_id = None
+    instruments = None
 
     if (is_artist):
         referall = "artist"
@@ -76,6 +77,10 @@ def main(query, returnHTML=False):
         else:
             tracelog.append('No start period found.')
         tracelog.append('---')
+
+        tracelog.append('Fetching \'played instruments\' of artist from Wikidata...')
+        instruments = wikidata.get_artist_instruments(name)
+        logArrayToTrace(instruments, tracelog, 'instruments')
 
         spotify_id = wikidata.get_artist_spotify_id(name)
     else:
@@ -223,6 +228,12 @@ def main(query, returnHTML=False):
             abstract += 'Some albums of the {} are {} and {}. '.format(referall, ", ".join(albums[:2]), albums[-1])
         else:
             abstract += 'An album of the {} is {}. '.format(referall, albums[0])
+
+    if instruments is not None:
+        if len(instruments) > 1:
+            abstract += 'The {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(instruments[:-1]), instruments[-1])
+        else:
+            abstract += 'The {} has been known to play {}. '.format(referall,instruments[0])
 
     if related_artists is not None:
         if returnHTML:
