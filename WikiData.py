@@ -208,7 +208,7 @@ class WikiData:
                     elif item['gender']['value'] == 'http://www.wikidata.org/entity/Q6581097':
                         return 'male'
                     else:
-                        'other'
+                        return 'other'
         return None
 
     def get_artist_genres(self, artist):
