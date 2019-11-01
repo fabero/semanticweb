@@ -113,7 +113,7 @@ def main(query, returnHTML = False):
     if(energyString is not None and danceableString is not None):
         abstract += 'The {} is known for its {}, {} music. '.format(referall, energyString, danceableString)
 
-    if(returnHTML):
+    if returnHTML:
         if track_names is not None and track_urls is not None:
             track_name_url = []
             for track in range(len(track_names)):
@@ -123,7 +123,7 @@ def main(query, returnHTML = False):
                 abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(track_name_url[:2]), track_name_url[-1])
             else:
                 abstract += 'The top track of the {} is {}. '.format(referall, track_name_url[0])
-    if(returnHTML is not True):
+    if returnHTML is not True:
         if track_names is not None:
             if len(track_names) > 1:
                 abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(track_names[:2]), track_names[-1])
@@ -143,10 +143,19 @@ def main(query, returnHTML = False):
             abstract += 'An album of the {} is {}. '.format(referall, albums[0])
 
     if related_artists is not None:
-        if len(related_artists) > 1:
-            abstract += 'Related artists are {} and {}. '.format(", ".join(related_artists[:2]),related_artists[-1])
+        if(returnHTML):
+            artist_url = []
+            for artist in range(len(related_artists)):
+                artist_url.append('<a onclick="getSummary(\'{}\')">{}</a>'.format(related_artists[artist], related_artists[artist]))
+            if len(related_artists) > 1:
+                abstract += 'Related artists are {} and {}. '.format(", ".join(artist_url[:2]), artist_url[-1])
+            else:
+                abstract += 'A related artist is {}. '.format(artist_url[0])
         else:
-            abstract += 'A related artist is {}. '.format(referall, related_artists[0])
+            if len(related_artists) > 1:
+                abstract += 'Related artists are {} and {}. '.format(", ".join(related_artists[:2]),related_artists[-1])
+            else:
+                abstract += 'A related artist is {}. '.format(related_artists[0])
     if(len(abstract) < 5):
         abstract += 'Unable to find any information related to the query.'
 
