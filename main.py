@@ -25,7 +25,10 @@ def popularityString(popularity):
 
 
 def main(query, returnHTML = False):
-    name = query.title()
+    if(query[0].isupper()):
+        name = query
+    else:
+        name = query.title()
 
     tracelog = []
 
