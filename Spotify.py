@@ -67,9 +67,12 @@ class Spotify:
         tracks_url = f'https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=NL'
         response = requests.get(tracks_url, headers=self.default_headers).json().get('tracks')
         if response is not None:
-            track_names = list(set([track['name'] for track in response]))
-            track_ids = list(set([track['id'] for track in response]))
-            return track_names, track_ids
+            # print(response)
+            tracks = [[track['name'], track['id'], track['external_urls']['spotify']] for track in response]
+            # track_names = list(set([track['name'] for track in response]))
+            # track_ids = list(set([track['id'] for track in response]))
+            # track_link = list(set())
+            return tracks
         return None
 
     def get_related_artists(self, artist_id):

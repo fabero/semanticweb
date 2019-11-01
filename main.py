@@ -23,6 +23,7 @@ def popularityString(popularity):
                 result = " popular "
     return result
 
+
 def main(query):
     name = query.title()
 
@@ -30,7 +31,9 @@ def main(query):
 
     label = wikidata.get_label(name)
 
-    top_tracks = None
+    track_names = None
+    track_ids = None
+    track_urls = None
     albums = None
     related_artists = None
     popularity = None
@@ -60,27 +63,20 @@ def main(query):
         spotify_id = musicbrainz.get_spotify_id(musicbrainz_id)
 
     if (spotify_id != "" and spotify_id is not None):
-        top_tracks = spotify.get_top_tracks(spotify_id)
         albums = spotify.get_artist_albums(spotify_id)
         related_artists = spotify.get_related_artists(spotify_id)
         artist_data = spotify.get_artist(spotify_id)
         popularity = artist_data['popularity']
         follower_total = artist_data['followers']['total']
         if (spotify_id != ""):
-            top_tracks, top_tracks_ids = spotify.get_top_tracks(spotify_id)
-            danceability, energy = spotify.get_artist_features(top_tracks_ids)
+            tracks = spotify.get_top_tracks(spotify_id)
+            track_names = [track[0] for track in tracks]
+            track_ids = [track[1] for track in tracks]
+            track_urls = [track[2] for track in tracks]
+            danceability, energy = spotify.get_artist_features(track_ids)
 
     # This abstract will be constructed using the available information
     abstract = ''
-
-    # Add something to the abstract for every variable that was found
-    # if hometown:
-    #     # @todo: find a way do discriminate bands and individuals
-    #     abstract += ' is a band from {}'.format(hometown)
-
-    # if bandmembers:
-
-    # if started_in:
 
     extended_referall = referall
 
@@ -117,13 +113,16 @@ def main(query):
     if(energyString is not None and danceableString is not None):
         abstract += 'The {} is known for its {}, {} music. '.format(referall, energyString, danceableString)
 
-    if top_tracks is not None:
-        if len(top_tracks) > 1:
-            abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(top_tracks[:2]), top_tracks[-1])
-        else:
-            abstract += 'The top track of the {} is {}. '.format(referall, top_tracks[0])
+    if track_names is not None and track_urls is not None:
+        track_name_url = []
+        for track in range(len(track_names)):
+            track_name_url.append('{} ({})'.format(track_names[track], track_urls[track]))
 
-    # etcetera
+        if len(track_name_url) > 1:
+            abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(track_name_url[:2]), track_name_url[-1])
+        else:
+            abstract += 'The top track of the {} is {}. '.format(referall, track_name_url[0])
+
     if members is not None:
         if len(members) > 1:
             abstract += 'Members of the band are {} and {}. '.format(", ".join(members[:-1]),members[-1])
