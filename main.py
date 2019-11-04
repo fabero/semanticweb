@@ -38,12 +38,18 @@ def main(query, returnHTML=False):
 
     tracelog = ['Fetching Wikidata for query \'{}\'...'.format(name), '---']
 
+    spotify_list = []
+    wikidata_list = []
+    musicbrainz_list = []
+
     is_artist = wikidata.check_if_artist(name)
 
     tracelog.append('Checking whether query is artist or band...')
     if is_artist:
+        wikidata_list.append('Artist entity')
         tracelog.append('{} is an artist.'.format(name))
     else:
+        wikidata_list.append('Band entity')
         tracelog.append('{} is a band.'.format(name))
     tracelog.append('---')
     label = wikidata.get_label(name)
@@ -66,6 +72,7 @@ def main(query, returnHTML=False):
         referall = "artist"
         tracelog.append('Fetching artist genres from Wikidata...')
         genres = wikidata.get_artist_genres(name)
+        wikidata_list.append('Genres')
         logArrayToTrace(genres, tracelog, 'genres')
 
         members = None
@@ -73,6 +80,7 @@ def main(query, returnHTML=False):
         tracelog.append('Fetching \'start period\' of artist from Wikidata...')
         time_period = wikidata.get_artist_start_period(name)
         if time_period is not None and len(time_period) > 0:
+            wikidata_list.append('Start period')
             tracelog.append('Start period found: {}.'.format(", ".join(time_period)))
         else:
             tracelog.append('No start period found.')
@@ -268,6 +276,15 @@ def main(query, returnHTML=False):
         for trace in range(len(tracelog)):
             traceList.append('<li>{}</li>'.format(tracelog[trace]))
         tracelog_Html += "".join(traceList)
+
+        spotify_Html = ''
+        wikidata_Html = ''
+        wikidata_Html_list = []
+        for listItem in range(len(wikidata_list)):
+            wikidata_Html_list.append('<li>{}</li>'.format(wikidata_list[listItem]))
+        wikidata_Html += "".join(wikidata_Html_list)
+        musicbrainz_Html = ''
+
         print('Returning HTML output...')
         html = '<p>{}</p>'.format(abstract)
         html += '<a data-toggle="collapse" href="#tracelog" role="button" aria-expanded="false" aria-controls="tracelog">Toggle tracelog</a>'
@@ -275,6 +292,11 @@ def main(query, returnHTML=False):
         html += '<ul class="tracelog">'
         html += tracelog_Html
         html += '</ul>'
+        html += '</div>'
+        html += '<div class="sources">'
+        html += wikidata_Html
+        html += spotify_Html
+        html += musicbrainz_Html
         html += '</div>'
         return html
     return abstract
