@@ -237,16 +237,17 @@ def main(query, returnHTML=False):
                 isAsinger = True
             else:
                 filteredInstruments.append(inst)
-        if len(filteredInstruments) > 1:
-            if isAsinger:
-                abstract += 'Besides singing, the {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
+        if len(filteredInstruments) > 0:
+            if len(filteredInstruments) > 1:
+                if isAsinger:
+                    abstract += 'Besides singing, the {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
+                else:
+                    abstract += 'The {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
             else:
-                abstract += 'The {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
-        else:
-            if isAsinger:
-                abstract += 'Besides singing, the {} has been known to play {}. '.format(referall,filteredInstruments[0])
-            else:
-                abstract += 'The {} has been known to play {}. '.format(referall,filteredInstruments[0])
+                if isAsinger:
+                    abstract += 'Besides singing, the {} has been known to play {}. '.format(referall,filteredInstruments[0])
+                else:
+                    abstract += 'The {} has been known to play {}. '.format(referall,filteredInstruments[0])
 
     if related_artists is not None:
         if returnHTML:
