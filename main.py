@@ -173,8 +173,8 @@ def main(query, returnHTML=False):
     if time_period is not None:
         if len(time_period) > 0:
             abstract += '{}, {}, started performing in {}. '.format(name, extended_referall, time_period[0][0:4])
-        else:
-            abstract += 'It is unclear when {}, {}, started performing. '.format(name, extended_referall)
+    else:
+        abstract += 'It is unclear when {}, {}, started performing. '.format(name, extended_referall)
 
     if danceability is not None:
         if danceability > 0.5:
