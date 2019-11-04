@@ -230,10 +230,23 @@ def main(query, returnHTML=False):
             abstract += 'An album of the {} is {}. '.format(referall, albums[0])
 
     if instruments is not None:
-        if len(instruments) > 1:
-            abstract += 'The {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(instruments[:-1]), instruments[-1])
+        filteredInstruments = []
+        isAsinger = False
+        for inst in instruments:
+            if inst == "voice" or inst == "vocalist":
+                isAsinger = True
+            else:
+                filteredInstruments.append(inst)
+        if len(filteredInstruments) > 1:
+            if isAsinger:
+                abstract += 'Besides singing, the {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
+            else:
+                abstract += 'The {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
         else:
-            abstract += 'The {} has been known to play {}. '.format(referall,instruments[0])
+            if isAsinger:
+                abstract += 'Besides singing, the {} has been known to play {}. '.format(referall,filteredInstruments[0])
+            else:
+                abstract += 'The {} has been known to play {}. '.format(referall,filteredInstruments[0])
 
     if related_artists is not None:
         if returnHTML:
