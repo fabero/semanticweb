@@ -7,12 +7,15 @@ wikidata = WikiData()
 spotify = Spotify()
 musicbrainz = MusicBrainz()
 
+
 def logArrayToTrace(arr, tracel, strname):
     if arr is not None and (len(arr) > 0):
-        tracel.append('Found {}: {} and {}.'.format(strname, ", ".join(arr[:-1]), arr[-1]))
+        tracel.append('Found {}: {} and {}.'.format(
+            strname, ", ".join(arr[:-1]), arr[-1]))
     else:
         tracel.append('No {} found.'.format(strname))
     tracel.append('---')
+
 
 def popularityString(popularity):
     result = " "
@@ -30,7 +33,7 @@ def popularityString(popularity):
     return result
 
 
-def main(query, returnHTML=False):
+def main(query, return_html=False):
     if query[0].isupper():
         name = query
     else:
@@ -38,31 +41,29 @@ def main(query, returnHTML=False):
 
     tracelog = ['Fetching Wikidata for query \'{}\'...'.format(name), '---']
 
-    is_artist = wikidata.check_if_artist(name)
-
     tracelog.append('Checking whether query is artist or band...')
+    is_artist = wikidata.check_if_artist(name)
     if is_artist:
         tracelog.append('{} is an artist.'.format(name))
     else:
         tracelog.append('{} is a band.'.format(name))
     tracelog.append('---')
-    label = wikidata.get_label(name)
 
+    # Initialize variables to keep track
     track_names = None
     track_ids = None
     track_urls = None
     albums = None
     related_artists = None
     popularity = None
-    follower_total = None
     danceability = None
-    danceableString = None
+    danceable_string = None
     energy = None
-    energyString = None
+    energy_string = None
     musicbrainz_id = None
     instruments = None
 
-    if (is_artist):
+    if is_artist:
         referall = "artist"
         tracelog.append('Fetching artist genres from Wikidata...')
         genres = wikidata.get_artist_genres(name)
@@ -73,12 +74,14 @@ def main(query, returnHTML=False):
         tracelog.append('Fetching \'start period\' of artist from Wikidata...')
         time_period = wikidata.get_artist_start_period(name)
         if time_period is not None and len(time_period) > 0:
-            tracelog.append('Start period found: {}.'.format(", ".join(time_period)))
+            tracelog.append('Start period found: {}.'.format(
+                ", ".join(time_period)))
         else:
             tracelog.append('No start period found.')
         tracelog.append('---')
 
-        tracelog.append('Fetching \'played instruments\' of artist from Wikidata...')
+        tracelog.append(
+            'Fetching \'played instruments\' of artist from Wikidata...')
         instruments = wikidata.get_artist_instruments(name)
         logArrayToTrace(instruments, tracelog, 'instruments')
 
@@ -96,7 +99,8 @@ def main(query, returnHTML=False):
         tracelog.append('Fetching \'start period\' of band from Wikidata...')
         time_period = wikidata.get_band_time_period(name)
         if time_period is not None and len(time_period) > 0:
-            tracelog.append('Start period found: {}.'.format(", ".join(time_period)))
+            tracelog.append('Start period found: {}.'.format(
+                ", ".join(time_period)))
         else:
             tracelog.append('No start period found.')
         tracelog.append('---')
@@ -147,7 +151,6 @@ def main(query, returnHTML=False):
         popularity = None
         if artist_data is not None:
             popularity = artist_data['popularity']
-            follower_total = artist_data['followers']['total']
         if spotify_id != "":
             tracks = spotify.get_top_tracks(spotify_id)
             track_names = [track[0] for track in tracks]
@@ -164,40 +167,46 @@ def main(query, returnHTML=False):
     if spotify_id != "":
         if genres is not None:
             if len(genres) > 0:
-                extended_referall = "a{}{} {}".format(popularityString(popularity), genres[0], referall)
+                extended_referall = "a{}{} {}".format(
+                    popularityString(popularity), genres[0], referall)
 
-    tracelog.append('Referall terms: \'{}\' and \'{}\''.format(referall, extended_referall))
+    tracelog.append('Referall terms: \'{}\' and \'{}\''.format(
+        referall, extended_referall))
     tracelog.append('---')
 
     tracelog.append('Generating summary for query...')
     if time_period is not None:
         if len(time_period) > 0:
-            abstract += '{}, {}, started performing in {}. '.format(name, extended_referall, time_period[0][0:4])
+            abstract += '{}, {}, started performing in {}. '.format(
+                name, extended_referall, time_period[0][0:4])
     else:
-        abstract += 'It is unclear when {}, {}, started performing. '.format(name, extended_referall)
+        abstract += 'It is unclear when {}, {}, started performing. '.format(
+            name, extended_referall)
 
     if danceability is not None:
         if danceability > 0.5:
             if danceability > 0.8:
-                danceableString = "extremely danceable"
+                danceable_string = "extremely danceable"
             else:
-                danceableString = "very danceable"
+                danceable_string = "very danceable"
         else:
-            danceableString = "not danceable"
+            danceable_string = "not danceable"
 
     if energy is not None:
         if energy > 0.5:
             if energy > 0.8:
-                energyString = "extremely energetic"
+                energy_string = "extremely energetic"
             else:
-                energyString = "very energetic"
+                energy_string = "very energetic"
         else:
-            energyString = "calm"
+            energy_string = "calm"
 
-    if energyString is not None and danceableString is not None:
-        abstract += 'The {} is known for its {}, {} music. '.format(referall, energyString, danceableString)
+    if energy_string is not None and danceable_string is not None:
+        abstract += 'The {} is known for its {}, {} music. '.format(
+            referall, energy_string, danceable_string)
 
-    if returnHTML:
+    # Make links clickable if the user is using the web interface
+    if return_html:
         if track_names is not None and track_urls is not None:
             track_name_url = []
             for track in range(len(track_names)):
@@ -208,55 +217,65 @@ def main(query, returnHTML=False):
                 abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(track_name_url[:2]),
                                                                           track_name_url[-1])
             else:
-                abstract += 'The top track of the {} is {}. '.format(referall, track_name_url[0])
-    if returnHTML is not True:
+                abstract += 'The top track of the {} is {}. '.format(
+                    referall, track_name_url[0])
+    if return_html is not True:
         if track_names is not None:
             if len(track_names) > 1:
                 abstract += 'Top tracks of the {} are {} and {}. '.format(referall, ", ".join(track_names[:2]),
                                                                           track_names[-1])
             else:
-                abstract += 'The top track of the {} is {}. '.format(referall, track_names[0])
+                abstract += 'The top track of the {} is {}. '.format(
+                    referall, track_names[0])
 
     if members is not None:
         if len(members) > 1:
-            abstract += 'Members of the band are {} and {}. '.format(", ".join(members[:-1]), members[-1])
+            abstract += 'Members of the band are {} and {}. '.format(
+                ", ".join(members[:-1]), members[-1])
         else:
             abstract += '{} is the band member. '.format(members[0])
 
     if albums is not None:
         if len(albums) > 1:
-            abstract += 'Some albums of the {} are {} and {}. '.format(referall, ", ".join(albums[:2]), albums[-1])
+            abstract += 'Some albums of the {} are {} and {}. '.format(
+                referall, ", ".join(albums[:2]), albums[-1])
         else:
-            abstract += 'An album of the {} is {}. '.format(referall, albums[0])
+            abstract += 'An album of the {} is {}. '.format(
+                referall, albums[0])
 
     if instruments is not None:
-        filteredInstruments = []
-        isAsinger = False
+        filtered_instruments = []
+        is_a_singer = False
         for inst in instruments:
             if inst == "voice" or inst == "vocalist":
-                isAsinger = True
+                is_a_singer = True
             else:
-                filteredInstruments.append(inst)
-        if len(filteredInstruments) > 0:
-            if len(filteredInstruments) > 1:
-                if isAsinger:
-                    abstract += 'Besides singing, the {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
+                filtered_instruments.append(inst)
+        if len(filtered_instruments) > 0:
+            if len(filtered_instruments) > 1:
+                if is_a_singer:
+                    abstract += 'Besides singing, the {} has been known to play several instruments, such as {} and {}. '.format(
+                        referall, ", ".join(filtered_instruments[:-1]), filtered_instruments[-1])
                 else:
-                    abstract += 'The {} has been known to play several instruments, such as {} and {}. '.format(referall,", ".join(filteredInstruments[:-1]), filteredInstruments[-1])
+                    abstract += 'The {} has been known to play several instruments, such as {} and {}. '.format(
+                        referall, ", ".join(filtered_instruments[:-1]), filtered_instruments[-1])
             else:
-                if isAsinger:
-                    abstract += 'Besides singing, the {} has been known to play {}. '.format(referall,filteredInstruments[0])
+                if is_a_singer:
+                    abstract += 'Besides singing, the {} has been known to play {}. '.format(
+                        referall, filtered_instruments[0])
                 else:
-                    abstract += 'The {} has been known to play {}. '.format(referall,filteredInstruments[0])
+                    abstract += 'The {} has been known to play {}. '.format(
+                        referall, filtered_instruments[0])
 
     if related_artists is not None:
-        if returnHTML:
+        if return_html:
             artist_url = []
             for artist in range(len(related_artists)):
                 artist_url.append(
                     '<a onclick="getSummary(\'{}\')">{}</a>'.format(related_artists[artist], related_artists[artist]))
             if len(related_artists) > 1:
-                abstract += 'Related artists are {} and {}. '.format(", ".join(artist_url[:2]), artist_url[-1])
+                abstract += 'Related artists are {} and {}. '.format(
+                    ", ".join(artist_url[:2]), artist_url[-1])
             else:
                 abstract += 'A related artist is {}. '.format(artist_url[0])
         else:
@@ -264,7 +283,8 @@ def main(query, returnHTML=False):
                 abstract += 'Related artists are {} and {}. '.format(", ".join(related_artists[:2]),
                                                                      related_artists[-1])
             else:
-                abstract += 'A related artist is {}. '.format(related_artists[0])
+                abstract += 'A related artist is {}. '.format(
+                    related_artists[0])
 
     tracelog.append('Outputting summary...')
     tracelog.append('---')
@@ -276,18 +296,18 @@ def main(query, returnHTML=False):
         tracelog.append('SUCCESS')
     tracelog.append('---')
 
-    if returnHTML:
-        tracelog_Html = ''
-        traceList = []
+    if return_html:
+        tracelog_html = ''
+        trace_list = []
         for trace in range(len(tracelog)):
-            traceList.append('<li>{}</li>'.format(tracelog[trace]))
-        tracelog_Html += "".join(traceList)
+            trace_list.append('<li>{}</li>'.format(tracelog[trace]))
+        tracelog_html += "".join(trace_list)
         print('Returning HTML output...')
         html = '<p>{}</p>'.format(abstract)
         html += '<a data-toggle="collapse" href="#tracelog" role="button" aria-expanded="false" aria-controls="tracelog">Toggle tracelog</a>'
         html += '<div class="collapse" id="tracelog">'
         html += '<ul class="tracelog">'
-        html += tracelog_Html
+        html += tracelog_html
         html += '</ul>'
         html += '</div>'
         return html
@@ -295,8 +315,10 @@ def main(query, returnHTML=False):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Fetch data on musical artists and bands.')
-    parser.add_argument('query', type=str, help='The band or artist to search for. Should be in quotes.')
+    parser = argparse.ArgumentParser(
+        description='Fetch data on musical artists and bands.')
+    parser.add_argument(
+        'query', type=str, help='The band or artist to search for. Should be in quotes.')
     args = parser.parse_args()
     result = main(args.query)
     print(result)
