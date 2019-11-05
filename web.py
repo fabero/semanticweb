@@ -4,14 +4,17 @@ from suggestions import *
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def welcome():
     return render_template('index.html')
+
 
 @app.route('/search')
 def web():
     query = request.args.get('q')
     return f'{main(query, True)}'
+
 
 @app.route('/suggestions')
 def ajax():
@@ -19,5 +22,6 @@ def ajax():
     results = suggestions(query)
     return jsonify(results)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(8080), debug=False)
