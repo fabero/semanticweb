@@ -1,5 +1,11 @@
 # semanticweb
-Final project for the course Semantic Web Technology
+## Final project for the course Semantic Web Technology
+Artist descriptor
+
+Install Python packages using [PIP](https://pypi.org/project/pip/)
+```bash
+pip install -r requirements.txt
+```
 
 Run via Python
 ```bash
@@ -11,4 +17,4 @@ Run via web interface
 $ python web.py
 ```
 
-Then go to http://localhost:8080
+Navigate to http://localhost:8080
